@@ -1,6 +1,6 @@
 import { relations, sql } from "drizzle-orm";
 import { index, pgTableCreator, primaryKey } from "drizzle-orm/pg-core";
-import { type AdapterAccount } from "next-auth/adapters";
+import type { AdapterAccount } from "next-auth/adapters";
 
 /**
  * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
@@ -11,11 +11,7 @@ import { type AdapterAccount } from "next-auth/adapters";
 export const createTable = pgTableCreator((name) => `portforlio_${name}`);
 
 export const users = createTable("user", (d) => ({
-  id: d
-    .varchar({ length: 255 })
-    .notNull()
-    .primaryKey()
-    .$defaultFn(() => crypto.randomUUID()),
+  id: d.uuid().notNull().primaryKey().defaultRandom(),
   name: d.varchar({ length: 255 }),
   email: d.varchar({ length: 255 }).notNull(),
   emailVerified: d
@@ -35,7 +31,7 @@ export const accounts = createTable(
   "account",
   (d) => ({
     userId: d
-      .varchar({ length: 255 })
+      .uuid()
       .notNull()
       .references(() => users.id),
     type: d.varchar({ length: 255 }).$type<AdapterAccount["type"]>().notNull(),
@@ -64,7 +60,7 @@ export const sessions = createTable(
   (d) => ({
     sessionToken: d.varchar({ length: 255 }).notNull().primaryKey(),
     userId: d
-      .varchar({ length: 255 })
+      .uuid()
       .notNull()
       .references(() => users.id),
     expires: d.timestamp({ mode: "date", withTimezone: true }).notNull(),
@@ -84,4 +80,66 @@ export const verificationTokens = createTable(
     expires: d.timestamp({ mode: "date", withTimezone: true }).notNull(),
   }),
   (t) => [primaryKey({ columns: [t.identifier, t.token] })],
+);
+
+export const projects = createTable("project", (d) => ({
+  id: d.uuid().notNull().primaryKey().defaultRandom(),
+  name: d.varchar({ length: 255 }).notNull(),
+  description: d.text(),
+  url: d.varchar({ length: 255 }).notNull(),
+  github: d.varchar({ length: 255 }),
+  image: d.varchar({ length: 255 }),
+  featured: d.boolean().default(false),
+  createdAt: d
+    .timestamp({
+      mode: "date",
+      withTimezone: true,
+    })
+    .default(sql`CURRENT_TIMESTAMP`),
+}));
+
+export const technologies = createTable("technology", (d) => ({
+  id: d.uuid().notNull().primaryKey().defaultRandom(),
+  name: d.varchar({ length: 255 }).notNull(),
+  description: d.text(),
+  url: d.varchar({ length: 255 }).notNull(),
+  github: d.varchar({ length: 255 }),
+}));
+
+export const projectTechnologies = createTable(
+  "project_technology",
+  (d) => ({
+    id: d.uuid().notNull().primaryKey().defaultRandom(),
+    projectId: d
+      .uuid()
+      .notNull()
+      .references(() => projects.id, { onDelete: "cascade" }),
+    technologyId: d
+      .uuid()
+      .notNull()
+      .references(() => technologies.id, { onDelete: "cascade" }),
+  }),
+  (t) => [index("project_technology_project_id_idx").on(t.projectId)],
+);
+
+export const projectsRelations = relations(projects, ({ many }) => ({
+  technologies: many(projectTechnologies),
+}));
+
+export const technologiesRelations = relations(technologies, ({ many }) => ({
+  projects: many(projectTechnologies),
+}));
+
+export const projectTechnologiesRelations = relations(
+  projectTechnologies,
+  ({ one }) => ({
+    project: one(projects, {
+      fields: [projectTechnologies.projectId],
+      references: [projects.id],
+    }),
+    technology: one(technologies, {
+      fields: [projectTechnologies.technologyId],
+      references: [technologies.id],
+    }),
+  }),
 );
