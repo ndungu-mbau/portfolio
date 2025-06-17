@@ -1,6 +1,7 @@
 import type React from "react";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { Toaster } from "sonner";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -30,7 +31,10 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <TRPCReactProvider>
-        <body className={inter.className}>{children}</body>
+        <body className={inter.className}>
+          <Toaster />
+          {children}
+        </body>
       </TRPCReactProvider>
     </html>
   );

@@ -106,6 +106,20 @@ export const technologies = createTable("technology", (d) => ({
   github: d.varchar({ length: 255 }),
 }));
 
+export const uploads = createTable("upload", (d) => ({
+  id: d.uuid().notNull().primaryKey().defaultRandom(),
+  name: d.varchar({ length: 255 }).notNull(),
+  url: d.varchar({ length: 255 }).notNull(),
+  key: d.varchar({ length: 255 }).notNull(),
+  size: d.varchar({ length: 255 }).notNull(),
+  createdAt: d
+    .timestamp({
+      mode: "date",
+      withTimezone: true,
+    })
+    .default(sql`CURRENT_TIMESTAMP`),
+}));
+
 export const projectTechnologies = createTable(
   "project_technology",
   (d) => ({
