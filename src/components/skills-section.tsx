@@ -1,37 +1,37 @@
-"use client";
+'use client'
 
-import { motion } from "framer-motion";
-import { Badge } from "~/components/ui/badge";
+import { motion } from 'framer-motion'
+import { Badge } from '~/components/ui/badge'
 
 export default function Skills() {
   const skillCategories = [
     {
-      title: "Frontend",
+      title: 'Frontend',
       skills: [
-        "React",
-        "Next.js",
-        "TypeScript",
-        "Tailwind CSS",
-        "Framer Motion",
-        "Vue.js",
+        'React',
+        'Next.js',
+        'TypeScript',
+        'Tailwind CSS',
+        'Framer Motion',
+        'Vue.js',
       ],
     },
     {
-      title: "Backend",
+      title: 'Backend',
       skills: [
-        "Node.js",
-        "Express",
-        "Python",
-        "PostgreSQL",
-        "MongoDB",
-        "Redis",
+        'Node.js',
+        'Express',
+        'Python',
+        'PostgreSQL',
+        'MongoDB',
+        'Redis',
       ],
     },
     {
-      title: "Tools & Others",
-      skills: ["Git", "Docker", "AWS", "Figma", "Jest", "Cypress"],
+      title: 'Tools & Others',
+      skills: ['Git', 'Docker', 'AWS', 'Figma', 'Jest', 'Cypress'],
     },
-  ];
+  ]
 
   return (
     <section id="skills" className="bg-neutral-950 px-4 py-20">
@@ -91,5 +91,5 @@ export default function Skills() {
         </div>
       </div>
     </section>
-  );
+  )
 }

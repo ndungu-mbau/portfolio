@@ -1,14 +1,14 @@
-"use client";
+'use client'
 
-import type React from "react";
+import type React from 'react'
 
-import { motion } from "framer-motion";
-import { useState } from "react";
-import Link from "next/link";
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
-import { Button } from "~/components/ui/button";
-import { Badge } from "~/components/ui/badge";
-import { Input } from "~/components/ui/input";
+import { motion } from 'framer-motion'
+import { useState } from 'react'
+import Link from 'next/link'
+import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card'
+import { Button } from '~/components/ui/button'
+import { Badge } from '~/components/ui/badge'
+import { Input } from '~/components/ui/input'
 import {
   ArrowLeft,
   Plus,
@@ -21,139 +21,132 @@ import {
   Database,
   Cloud,
   Wrench,
-} from "lucide-react";
+} from 'lucide-react'
 
 // Mock technologies data
 const mockTechnologies = [
   {
-    id: "react",
-    name: "React",
-    category: "Frontend",
-    color: "blue",
+    id: 'react',
+    name: 'React',
+    category: 'Frontend',
+    color: 'blue',
     icon: Code,
     usageCount: 8,
   },
   {
-    id: "nextjs",
-    name: "Next.js",
-    category: "Frontend",
-    color: "gray",
+    id: 'nextjs',
+    name: 'Next.js',
+    category: 'Frontend',
+    color: 'gray',
     icon: Code,
     usageCount: 6,
   },
   {
-    id: "typescript",
-    name: "TypeScript",
-    category: "Frontend",
-    color: "blue",
+    id: 'typescript',
+    name: 'TypeScript',
+    category: 'Frontend',
+    color: 'blue',
     icon: Code,
     usageCount: 10,
   },
   {
-    id: "nodejs",
-    name: "Node.js",
-    category: "Backend",
-    color: "green",
+    id: 'nodejs',
+    name: 'Node.js',
+    category: 'Backend',
+    color: 'green',
     icon: Server,
     usageCount: 7,
   },
   {
-    id: "python",
-    name: "Python",
-    category: "Backend",
-    color: "yellow",
+    id: 'python',
+    name: 'Python',
+    category: 'Backend',
+    color: 'yellow',
     icon: Server,
     usageCount: 5,
   },
   {
-    id: "postgresql",
-    name: "PostgreSQL",
-    category: "Database",
-    color: "blue",
+    id: 'postgresql',
+    name: 'PostgreSQL',
+    category: 'Database',
+    color: 'blue',
     icon: Database,
     usageCount: 4,
   },
   {
-    id: "mongodb",
-    name: "MongoDB",
-    category: "Database",
-    color: "green",
+    id: 'mongodb',
+    name: 'MongoDB',
+    category: 'Database',
+    color: 'green',
     icon: Database,
     usageCount: 3,
   },
   {
-    id: "aws",
-    name: "AWS",
-    category: "Cloud",
-    color: "orange",
+    id: 'aws',
+    name: 'AWS',
+    category: 'Cloud',
+    color: 'orange',
     icon: Cloud,
     usageCount: 6,
   },
   {
-    id: "docker",
-    name: "Docker",
-    category: "DevOps",
-    color: "blue",
+    id: 'docker',
+    name: 'Docker',
+    category: 'DevOps',
+    color: 'blue',
     icon: Wrench,
     usageCount: 5,
   },
   {
-    id: "tailwind",
-    name: "Tailwind CSS",
-    category: "Frontend",
-    color: "cyan",
+    id: 'tailwind',
+    name: 'Tailwind CSS',
+    category: 'Frontend',
+    color: 'cyan',
     icon: Palette,
     usageCount: 9,
   },
-];
+]
 
-const categories = [
-  "All",
-  "Frontend",
-  "Backend",
-  "Database",
-  "Cloud",
-  "DevOps",
-];
+const categories = ['All', 'Frontend', 'Backend', 'Database', 'Cloud', 'DevOps']
 
 export default function AdminTechnologiesPage() {
-  const [technologies, setTechnologies] = useState(mockTechnologies);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [categoryFilter, setCategoryFilter] = useState("All");
-  const [newTech, setNewTech] = useState({ name: "", category: "Frontend" });
-  const [showAddForm, setShowAddForm] = useState(false);
+  const [technologies, setTechnologies] = useState(mockTechnologies)
+  const [searchTerm, setSearchTerm] = useState('')
+  const [categoryFilter, setCategoryFilter] = useState('All')
+  const [newTech, setNewTech] = useState({ name: '', category: 'Frontend' })
+  const [showAddForm, setShowAddForm] = useState(false)
 
   const filteredTechnologies = technologies.filter((tech) => {
     const matchesSearch = tech.name
       .toLowerCase()
-      .includes(searchTerm.toLowerCase());
+      .includes(searchTerm.toLowerCase())
     const matchesCategory =
-      categoryFilter === "All" || tech.category === categoryFilter;
-    return matchesSearch && matchesCategory;
-  });
+      categoryFilter === 'All' || tech.category === categoryFilter
+    return matchesSearch && matchesCategory
+  })
 
   const handleAddTechnology = (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault()
     if (newTech.name.trim()) {
       const newTechnology = {
-        id: newTech.name.toLowerCase().replace(/\s+/g, "-"),
+        id: newTech.name.toLowerCase().replace(/\s+/g, '-'),
         name: newTech.name,
         category: newTech.category,
-        color: "gray",
+        color: 'gray',
         icon: Code,
         usageCount: 0,
-      };
-      setTechnologies([...technologies, newTechnology]);
-      setNewTech({ name: "", category: "Frontend" });
-      setShowAddForm(false);
+      }
+      setTechnologies([...technologies, newTechnology])
+      setNewTech({ name: '', category: 'Frontend' })
+      setShowAddForm(false)
     }
-  };
+  }
 
   const handleDeleteTechnology = (techId: string) => {
-    if (confirm("Are you sure want to delete this technology?")) {
-      setTechnologies(technologies.filter((t) => t.id !== techId));
+    if (confirm('Are you sure want to delete this technology?')) {
+      setTechnologies(technologies.filter((t) => t.id !== techId))
     }
-  };
+  }
 
   // const getIconForCategory = (category: string) => {
   //   switch (category) {
@@ -236,7 +229,7 @@ export default function AdminTechnologiesPage() {
                     className="rounded-md border border-neutral-600 bg-neutral-800/50 px-3 py-2 text-white dark:border-neutral-800"
                   >
                     {categories
-                      .filter((cat) => cat !== "All")
+                      .filter((cat) => cat !== 'All')
                       .map((category) => (
                         <option key={category} value={category}>
                           {category}
@@ -285,14 +278,14 @@ export default function AdminTechnologiesPage() {
                     <Button
                       key={category}
                       variant={
-                        categoryFilter === category ? "default" : "outline"
+                        categoryFilter === category ? 'default' : 'outline'
                       }
                       size="sm"
                       onClick={() => setCategoryFilter(category)}
                       className={
                         categoryFilter === category
-                          ? "bg-white text-black"
-                          : "border-neutral-600 text-neutral-300 hover:bg-neutral-800"
+                          ? 'bg-white text-black'
+                          : 'border-neutral-600 text-neutral-300 hover:bg-neutral-800'
                       }
                     >
                       {category}
@@ -321,7 +314,7 @@ export default function AdminTechnologiesPage() {
                   </div>
                 </div>
                 {categories
-                  .filter((cat) => cat !== "All")
+                  .filter((cat) => cat !== 'All')
                   .map((category) => (
                     <div key={category} className="text-center">
                       <div className="text-2xl font-bold text-white">
@@ -340,7 +333,7 @@ export default function AdminTechnologiesPage() {
           {/* Technologies Grid */}
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {filteredTechnologies.map((tech, index) => {
-              const IconComponent = tech.icon;
+              const IconComponent = tech.icon
               return (
                 <motion.div
                   key={tech.id}
@@ -390,12 +383,12 @@ export default function AdminTechnologiesPage() {
                       </div>
                       <div className="text-xs text-neutral-500">
                         Used in {tech.usageCount} project
-                        {tech.usageCount !== 1 ? "s" : ""}
+                        {tech.usageCount !== 1 ? 's' : ''}
                       </div>
                     </CardContent>
                   </Card>
                 </motion.div>
-              );
+              )
             })}
           </div>
 
@@ -409,5 +402,5 @@ export default function AdminTechnologiesPage() {
         </motion.div>
       </div>
     </div>
-  );
+  )
 }

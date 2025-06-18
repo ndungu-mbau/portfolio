@@ -1,47 +1,47 @@
 /* eslint-disable @next/next/no-img-element */
-"use client";
+'use client'
 
-import { useState } from "react";
-import { UploadDropzone } from "~/lib/uploadthing";
-import { Card, CardContent } from "~/components/ui/card";
-import { Button } from "~/components/ui/button";
-import { Progress } from "~/components/ui/progress";
-import { Badge } from "~/components/ui/badge";
-import { Upload, X, CheckCircle, Copy, ExternalLink } from "lucide-react";
-import { toast } from "sonner";
+import { useState } from 'react'
+import { UploadDropzone } from '~/lib/uploadthing'
+import { Card, CardContent } from '~/components/ui/card'
+import { Button } from '~/components/ui/button'
+import { Progress } from '~/components/ui/progress'
+import { Badge } from '~/components/ui/badge'
+import { Upload, X, CheckCircle, Copy, ExternalLink } from 'lucide-react'
+import { toast } from 'sonner'
 
 interface UploadedFile {
-  url: string;
-  name: string;
-  size: number;
-  key: string;
+  url: string
+  name: string
+  size: number
+  key: string
 }
 
 export function ImageUpload() {
-  const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
-  const [isUploading, setIsUploading] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState(0);
+  const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([])
+  const [isUploading, setIsUploading] = useState(false)
+  const [uploadProgress, setUploadProgress] = useState(0)
 
   const copyToClipboard = (url: string) => {
-    void navigator.clipboard.writeText(url);
-    toast.success("Copied!", {
-      description: "Image URL copied to clipboard",
-    });
-  };
+    void navigator.clipboard.writeText(url)
+    toast.success('Copied!', {
+      description: 'Image URL copied to clipboard',
+    })
+  }
 
   const removeFile = (key: string) => {
-    setUploadedFiles((prev) => prev.filter((file) => file.key !== key));
-  };
+    setUploadedFiles((prev) => prev.filter((file) => file.key !== key))
+  }
 
   const formatFileSize = (bytes: number) => {
-    if (bytes === 0) return "0 Bytes";
-    const k = 1024;
-    const sizes = ["Bytes", "KB", "MB", "GB"];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    if (bytes === 0) return '0 Bytes'
+    const k = 1024
+    const sizes = ['Bytes', 'KB', 'MB', 'GB']
+    const i = Math.floor(Math.log(bytes) / Math.log(k))
     return (
-      Number.parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + "" + sizes[i]
-    );
-  };
+      Number.parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + '' + sizes[i]
+    )
+  }
 
   return (
     <div className="space-y-8">
@@ -57,36 +57,36 @@ export function ImageUpload() {
                   name: file.name,
                   size: file.size,
                   key: file.key,
-                }));
-                setUploadedFiles((prev) => [...prev, ...newFiles]);
-                setIsUploading(false);
-                setUploadProgress(0);
-                toast.success("Upload Complete!", {
+                }))
+                setUploadedFiles((prev) => [...prev, ...newFiles])
+                setIsUploading(false)
+                setUploadProgress(0)
+                toast.success('Upload Complete!', {
                   description: `${res.length} file(s) uploaded successfully`,
-                });
+                })
               }
             }}
             onUploadError={(error: Error) => {
-              setIsUploading(false);
-              setUploadProgress(0);
-              toast.error("Upload Failed", {
+              setIsUploading(false)
+              setUploadProgress(0)
+              toast.error('Upload Failed', {
                 description: error.message,
-              });
+              })
             }}
             onUploadBegin={() => {
-              setIsUploading(true);
-              setUploadProgress(0);
+              setIsUploading(true)
+              setUploadProgress(0)
             }}
             onUploadProgress={(progress) => {
-              setUploadProgress(progress);
+              setUploadProgress(progress)
             }}
             appearance={{
-              container: "border-none bg-transparent",
-              uploadIcon: "text-neutral-500",
-              label: "text-neutral-800 text-lg font-medium",
-              allowedContent: "text-neutral-500 text-sm",
+              container: 'border-none bg-transparent',
+              uploadIcon: 'text-neutral-500',
+              label: 'text-neutral-800 text-lg font-medium',
+              allowedContent: 'text-neutral-500 text-sm',
               button:
-                "bg-neutral-100 text-neutral-900 hover:bg-neutral-200 transition-colors ut-ready:bg-neutral-100 ut-uploading:cursor-not-allowed ut-uploading:bg-neutral-600",
+                'bg-neutral-100 text-neutral-900 hover:bg-neutral-200 transition-colors ut-ready:bg-neutral-100 ut-uploading:cursor-not-allowed ut-uploading:bg-neutral-600',
             }}
             content={{
               uploadIcon: () => (
@@ -148,7 +148,7 @@ export function ImageUpload() {
               >
                 <div className="relative aspect-video overflow-hidden">
                   <img
-                    src={file.url || "/placeholder.svg"}
+                    src={file.url || '/placeholder.svg'}
                     alt={file.name}
                     className="object-cover transition-transform duration-300 group-hover:scale-105"
                   />
@@ -209,5 +209,5 @@ export function ImageUpload() {
         </div>
       )}
     </div>
-  );
+  )
 }

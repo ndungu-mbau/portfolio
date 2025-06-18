@@ -1,129 +1,129 @@
-"use client";
+'use client'
 
-import { motion } from "framer-motion";
-import Link from "next/link";
-import Image from "next/image";
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
-import { Badge } from "~/components/ui/badge";
-import { Button } from "~/components/ui/button";
-import { ExternalLink } from "lucide-react";
-import FeaturedProjectsCarousel from "~/components/featured-projects-carousel";
+import { motion } from 'framer-motion'
+import Link from 'next/link'
+import Image from 'next/image'
+import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card'
+import { Badge } from '~/components/ui/badge'
+import { Button } from '~/components/ui/button'
+import { ExternalLink } from 'lucide-react'
+import FeaturedProjectsCarousel from '~/components/featured-projects-carousel'
 
 // Mock project data - in a real app, this would come from a database or API
 const featuredProjects = [
   {
-    id: "ecommerce-platform",
-    title: "E-Commerce Platform",
+    id: 'ecommerce-platform',
+    title: 'E-Commerce Platform',
     description:
-      "A full-stack e-commerce solution with React, Node.js, and Stripe integration. Features include user authentication, product management, order processing advanced analytics.",
+      'A full-stack e-commerce solution with React, Node.js, and Stripe integration. Features include user authentication, product management, order processing advanced analytics.',
     longDescription:
-      "This comprehensive e-commerce platform was built to handle high-traffic retail operations. It includes advanced features like inventory management, real-time analytics, multi-payment gateway integration, and a sophisticated admin dashboard.",
-    image: "/placeholder.svg?height=400&width=600",
-    technologies: ["React", "Node.js", "MongoDB", "Stripe", "Redis", "AWS"],
-    liveUrl: "https://example.com",
-    githubUrl: "https://github.com/example/ecommerce",
+      'This comprehensive e-commerce platform was built to handle high-traffic retail operations. It includes advanced features like inventory management, real-time analytics, multi-payment gateway integration, and a sophisticated admin dashboard.',
+    image: '/placeholder.svg?height=400&width=600',
+    technologies: ['React', 'Node.js', 'MongoDB', 'Stripe', 'Redis', 'AWS'],
+    liveUrl: 'https://example.com',
+    githubUrl: 'https://github.com/example/ecommerce',
     featured: true,
-    status: "Live",
-    duration: "6 months",
-    team: "4 developers",
-    year: "2024",
+    status: 'Live',
+    duration: '6 months',
+    team: '4 developers',
+    year: '2024',
   },
   {
-    id: "task-management-app",
-    title: "Task Management App",
+    id: 'task-management-app',
+    title: 'Task Management App',
     description:
-      "A collaborative task management application built with Next.js and real-time updates using Socket.io. Includes team collaboration features advanced project tracking.",
+      'A collaborative task management application built with Next.js and real-time updates using Socket.io. Includes team collaboration features advanced project tracking.',
     longDescription:
-      "A modern task management solution designed for remote teams. Features real-time collaboration, advanced project tracking, time tools, and comprehensive reporting capabilities.",
-    image: "/placeholder.svg?height=400&width=600",
-    technologies: ["Next.js", "Socket.io", "PostgreSQL", "Tailwind", "Prisma"],
-    liveUrl: "https://example.com",
-    githubUrl: "https://github.com/example/taskapp",
+      'A modern task management solution designed for remote teams. Features real-time collaboration, advanced project tracking, time tools, and comprehensive reporting capabilities.',
+    image: '/placeholder.svg?height=400&width=600',
+    technologies: ['Next.js', 'Socket.io', 'PostgreSQL', 'Tailwind', 'Prisma'],
+    liveUrl: 'https://example.com',
+    githubUrl: 'https://github.com/example/taskapp',
     featured: true,
-    status: "Live",
-    duration: "4 months",
-    team: "3 developers",
-    year: "2024",
+    status: 'Live',
+    duration: '4 months',
+    team: '3 developers',
+    year: '2024',
   },
   {
-    id: "ai-dashboard",
-    title: "AI Analytics Dashboard",
+    id: 'ai-dashboard',
+    title: 'AI Analytics Dashboard',
     description:
-      "An intelligent analytics dashboard powered by machine learning algorithms. Provides real-time insights, predictive analytics, and automated reporting for business intelligence.",
+      'An intelligent analytics dashboard powered by machine learning algorithms. Provides real-time insights, predictive analytics, and automated reporting for business intelligence.',
     longDescription:
-      "A comprehensive AI-powered dashboard that transforms raw data into actionable insights using advanced machine learning algorithms and beautiful visualizations.",
-    image: "/placeholder.svg?height=400&width=600",
+      'A comprehensive AI-powered dashboard that transforms raw data into actionable insights using advanced machine learning algorithms and beautiful visualizations.',
+    image: '/placeholder.svg?height=400&width=600',
     technologies: [
-      "React",
-      "Python",
-      "TensorFlow",
-      "D3.js",
-      "FastAPI",
-      "PostgreSQL",
+      'React',
+      'Python',
+      'TensorFlow',
+      'D3.js',
+      'FastAPI',
+      'PostgreSQL',
     ],
-    liveUrl: "https://example.com",
-    githubUrl: "https://github.com/example/ai-dashboard",
+    liveUrl: 'https://example.com',
+    githubUrl: 'https://github.com/example/ai-dashboard',
     featured: true,
-    status: "Beta",
-    duration: "8 months",
-    team: "5 developers",
-    year: "2024",
+    status: 'Beta',
+    duration: '8 months',
+    team: '5 developers',
+    year: '2024',
   },
-];
+]
 
 const otherProjects = [
   {
-    id: "weather-dashboard",
-    title: "Weather Dashboard",
+    id: 'weather-dashboard',
+    title: 'Weather Dashboard',
     description:
-      "A beautiful weather dashboard with location-based forecasts, interactive maps, and detailed analytics.",
+      'A beautiful weather dashboard with location-based forecasts, interactive maps, and detailed analytics.',
     longDescription:
-      "An intuitive weather application that provides comprehensive information with beautiful visualizations and interactive maps.",
-    image: "/placeholder.svg?height=300&width=500",
-    technologies: ["Vue.js", "Chart.js", "Weather API", "CSS3"],
-    liveUrl: "https://example.com",
-    githubUrl: "https://github.com/example/weather",
+      'An intuitive weather application that provides comprehensive information with beautiful visualizations and interactive maps.',
+    image: '/placeholder.svg?height=300&width=500',
+    technologies: ['Vue.js', 'Chart.js', 'Weather API', 'CSS3'],
+    liveUrl: 'https://example.com',
+    githubUrl: 'https://github.com/example/weather',
     featured: false,
-    status: "Live",
-    duration: "2 months",
-    team: "Solo",
-    year: "2023",
+    status: 'Live',
+    duration: '2 months',
+    team: 'Solo',
+    year: '2023',
   },
   {
-    id: "blog-platform",
-    title: "Blog Platform",
+    id: 'blog-platform',
+    title: 'Blog Platform',
     description:
-      "A modern blog platform with markdown support, SEO optimization, and content management system.",
+      'A modern blog platform with markdown support, SEO optimization, and content management system.',
     longDescription:
-      "A full-featured blogging platform with advanced content management, SEO tools, and analytics dashboard.",
-    image: "/placeholder.svg?height=300&width=500",
-    technologies: ["Next.js", "MDX", "Supabase", "Tailwind"],
-    liveUrl: "https://example.com",
-    githubUrl: "https://github.com/example/blog",
+      'A full-featured blogging platform with advanced content management, SEO tools, and analytics dashboard.',
+    image: '/placeholder.svg?height=300&width=500',
+    technologies: ['Next.js', 'MDX', 'Supabase', 'Tailwind'],
+    liveUrl: 'https://example.com',
+    githubUrl: 'https://github.com/example/blog',
     featured: false,
-    status: "Live",
-    duration: "3 months",
-    team: "2 developers",
-    year: "2023",
+    status: 'Live',
+    duration: '3 months',
+    team: '2 developers',
+    year: '2023',
   },
   {
-    id: "portfolio-generator",
-    title: "Portfolio Generator",
+    id: 'portfolio-generator',
+    title: 'Portfolio Generator',
     description:
-      "An automated portfolio generator that creates beautiful developer portfolios from GitHub data.",
+      'An automated portfolio generator that creates beautiful developer portfolios from GitHub data.',
     longDescription:
-      "A tool that automatically generates professional portfolios by analyzing GitHub repositories and creating beautiful presentations.",
-    image: "/placeholder.svg?height=300&width=500",
-    technologies: ["React", "GitHub API", "Styled Components"],
-    liveUrl: "https://example.com",
-    githubUrl: "https://github.com/example/portfolio-gen",
+      'A tool that automatically generates professional portfolios by analyzing GitHub repositories and creating beautiful presentations.',
+    image: '/placeholder.svg?height=300&width=500',
+    technologies: ['React', 'GitHub API', 'Styled Components'],
+    liveUrl: 'https://example.com',
+    githubUrl: 'https://github.com/example/portfolio-gen',
     featured: false,
-    status: "Beta",
-    duration: "2 months",
-    team: "Solo",
-    year: "2023",
+    status: 'Beta',
+    duration: '2 months',
+    team: 'Solo',
+    year: '2023',
   },
-];
+]
 
 export default function ProjectsPage() {
   return (
@@ -208,7 +208,7 @@ export default function ProjectsPage() {
                 <Card className="group h-full overflow-hidden border-neutral-700 bg-neutral-900/50 transition-all duration-300 hover:border-neutral-500">
                   <div className="relative overflow-hidden">
                     <Image
-                      src={project.image || "/placeholder.svg"}
+                      src={project.image || '/placeholder.svg'}
                       alt={project.title}
                       width={500}
                       height={300}
@@ -293,5 +293,5 @@ export default function ProjectsPage() {
         </div>
       </section>
     </div>
-  );
+  )
 }

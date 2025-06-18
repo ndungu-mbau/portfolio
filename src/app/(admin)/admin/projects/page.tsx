@@ -1,96 +1,96 @@
-"use client";
+'use client'
 
-import { motion } from "framer-motion";
-import { useState } from "react";
-import Link from "next/link";
-import Image from "next/image";
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
-import { Button } from "~/components/ui/button";
-import { Badge } from "~/components/ui/badge";
-import { Input } from "~/components/ui/input";
-import { Plus, Edit, Trash2, Search, Eye } from "lucide-react";
+import { motion } from 'framer-motion'
+import { useState } from 'react'
+import Link from 'next/link'
+import Image from 'next/image'
+import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card'
+import { Button } from '~/components/ui/button'
+import { Badge } from '~/components/ui/badge'
+import { Input } from '~/components/ui/input'
+import { Plus, Edit, Trash2, Search, Eye } from 'lucide-react'
 
 // Mock projects data
 const mockProjects = [
   {
-    id: "ecommerce-platform",
-    title: "E-Commerce Platform",
+    id: 'ecommerce-platform',
+    title: 'E-Commerce Platform',
     description:
-      "A full-stack e-commerce solution with React, Node.js, and Stripe integration.",
-    image: "/placeholder.svg?height=200&width=300",
-    technologies: ["React", "Node.js", "MongoDB", "Stripe"],
-    status: "Live",
+      'A full-stack e-commerce solution with React, Node.js, and Stripe integration.',
+    image: '/placeholder.svg?height=200&width=300',
+    technologies: ['React', 'Node.js', 'MongoDB', 'Stripe'],
+    status: 'Live',
     featured: true,
-    year: "2024",
-    createdAt: "2024-01-15",
-    updatedAt: "2024-01-20",
+    year: '2024',
+    createdAt: '2024-01-15',
+    updatedAt: '2024-01-20',
   },
   {
-    id: "task-management-app",
-    title: "Task Management App",
+    id: 'task-management-app',
+    title: 'Task Management App',
     description:
-      "A collaborative task management application built with Next.js and real-time updates.",
-    image: "/placeholder.svg?height=200&width=300",
-    technologies: ["Next.js", "Socket.io", "PostgreSQL"],
-    status: "Live",
+      'A collaborative task management application built with Next.js and real-time updates.',
+    image: '/placeholder.svg?height=200&width=300',
+    technologies: ['Next.js', 'Socket.io', 'PostgreSQL'],
+    status: 'Live',
     featured: true,
-    year: "2024",
-    createdAt: "2024-02-10",
-    updatedAt: "2024-02-15",
+    year: '2024',
+    createdAt: '2024-02-10',
+    updatedAt: '2024-02-15',
   },
   {
-    id: "weather-dashboard",
-    title: "Weather Dashboard",
+    id: 'weather-dashboard',
+    title: 'Weather Dashboard',
     description:
-      "A beautiful weather dashboard with location-based forecasts and interactive maps.",
-    image: "/placeholder.svg?height=200&width=300",
-    technologies: ["Vue.js", "Chart.js", "Weather API"],
-    status: "Live",
+      'A beautiful weather dashboard with location-based forecasts and interactive maps.',
+    image: '/placeholder.svg?height=200&width=300',
+    technologies: ['Vue.js', 'Chart.js', 'Weather API'],
+    status: 'Live',
     featured: false,
-    year: "2023",
-    createdAt: "2023-11-05",
-    updatedAt: "2023-11-10",
+    year: '2023',
+    createdAt: '2023-11-05',
+    updatedAt: '2023-11-10',
   },
   {
-    id: "blog-platform",
-    title: "Blog Platform",
+    id: 'blog-platform',
+    title: 'Blog Platform',
     description:
-      "A modern blog platform with markdown support and SEO optimization.",
-    image: "/placeholder.svg?height=200&width=300",
-    technologies: ["Next.js", "MDX", "Supabase"],
-    status: "Beta",
+      'A modern blog platform with markdown support and SEO optimization.',
+    image: '/placeholder.svg?height=200&width=300',
+    technologies: ['Next.js', 'MDX', 'Supabase'],
+    status: 'Beta',
     featured: false,
-    year: "2023",
-    createdAt: "2023-09-20",
-    updatedAt: "2023-10-01",
+    year: '2023',
+    createdAt: '2023-09-20',
+    updatedAt: '2023-10-01',
   },
-];
+]
 
 export default function AdminProjectsPage() {
-  const [projects, setProjects] = useState(mockProjects);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState("all");
-  const [featuredFilter, setFeaturedFilter] = useState("all");
+  const [projects, setProjects] = useState(mockProjects)
+  const [searchTerm, setSearchTerm] = useState('')
+  const [statusFilter, setStatusFilter] = useState('all')
+  const [featuredFilter, setFeaturedFilter] = useState('all')
 
   const filteredProjects = projects.filter((project) => {
     const matchesSearch =
       project.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      project.description.toLowerCase().includes(searchTerm.toLowerCase());
+      project.description.toLowerCase().includes(searchTerm.toLowerCase())
     const matchesStatus =
-      statusFilter === "all" || project.status.toLowerCase() === statusFilter;
+      statusFilter === 'all' || project.status.toLowerCase() === statusFilter
     const matchesFeatured =
-      featuredFilter === "all" ||
-      (featuredFilter === "featured" && project.featured) ||
-      (featuredFilter === "not-featured" && !project.featured);
+      featuredFilter === 'all' ||
+      (featuredFilter === 'featured' && project.featured) ||
+      (featuredFilter === 'not-featured' && !project.featured)
 
-    return matchesSearch && matchesStatus && matchesFeatured;
-  });
+    return matchesSearch && matchesStatus && matchesFeatured
+  })
 
   const handleDeleteProject = (projectId: string) => {
-    if (confirm("Are you sure want to delete this project?")) {
-      setProjects(projects.filter((p) => p.id !== projectId));
+    if (confirm('Are you sure want to delete this project?')) {
+      setProjects(projects.filter((p) => p.id !== projectId))
     }
-  };
+  }
 
   return (
     <div className="min-h-screen bg-neutral-950">
@@ -178,7 +178,7 @@ export default function AdminProjectsPage() {
                 <Card className="group overflow-hidden border-neutral-700 bg-neutral-900/50 transition-colors hover:border-neutral-500">
                   <div className="relative">
                     <Image
-                      src={project.image || "/placeholder.svg"}
+                      src={project.image || '/placeholder.svg'}
                       alt={project.title}
                       width={300}
                       height={200}
@@ -193,11 +193,11 @@ export default function AdminProjectsPage() {
                       <Badge
                         variant="outline"
                         className={`text-xs ${
-                          project.status === "Live"
-                            ? "border-green-400/30 bg-green-400/10 text-green-400"
-                            : project.status === "Beta"
-                              ? "border-yellow-400/30 bg-yellow-400/10 text-yellow-400"
-                              : "border-blue-400/30 bg-blue-400/10 text-blue-400"
+                          project.status === 'Live'
+                            ? 'border-green-400/30 bg-green-400/10 text-green-400'
+                            : project.status === 'Beta'
+                              ? 'border-yellow-400/30 bg-yellow-400/10 text-yellow-400'
+                              : 'border-blue-400/30 bg-blue-400/10 text-blue-400'
                         }`}
                       >
                         {project.status}
@@ -237,11 +237,11 @@ export default function AdminProjectsPage() {
 
                     <div className="text-xs text-neutral-500">
                       <p>
-                        Created:{" "}
+                        Created:{' '}
                         {new Date(project.createdAt).toLocaleDateString()}
                       </p>
                       <p>
-                        Updated:{" "}
+                        Updated:{' '}
                         {new Date(project.updatedAt).toLocaleDateString()}
                       </p>
                     </div>
@@ -293,5 +293,5 @@ export default function AdminProjectsPage() {
         </motion.div>
       </div>
     </div>
-  );
+  )
 }

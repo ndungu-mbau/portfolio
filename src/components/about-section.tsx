@@ -1,28 +1,28 @@
-"use client";
+'use client'
 
-import { motion } from "framer-motion";
-import { Card, CardContent } from "~/components/ui/card";
-import { Code, Palette, Zap } from "lucide-react";
+import { motion } from 'framer-motion'
+import { Card, CardContent } from '~/components/ui/card'
+import { Code, Palette, Zap } from 'lucide-react'
 
 export default function About() {
   const features = [
     {
       icon: <Code className="h-8 w-8 text-neutral-300" />,
-      title: "Clean Code",
+      title: 'Clean Code',
       description:
-        "Writing maintainable and scalable code following best practices",
+        'Writing maintainable and scalable code following best practices',
     },
     {
       icon: <Palette className="h-8 w-8 text-neutral-300" />,
-      title: "Creative Design",
-      description: "Crafting beautiful and intuitive user interfaces",
+      title: 'Creative Design',
+      description: 'Crafting beautiful and intuitive user interfaces',
     },
     {
       icon: <Zap className="h-8 w-8 text-neutral-300" />,
-      title: "Performance",
-      description: "Optimizing applications for speed and efficiency",
+      title: 'Performance',
+      description: 'Optimizing applications for speed and efficiency',
     },
-  ];
+  ]
 
   return (
     <section id="about" className="bg-neutral-950 px-4 py-20">
@@ -91,5 +91,5 @@ export default function About() {
         </div>
       </div>
     </section>
-  );
+  )
 }

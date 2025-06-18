@@ -1,44 +1,44 @@
-"use client";
+'use client'
 
-import Link from "next/link";
-import Image from "next/image";
-import { usePathname } from "next/navigation";
-import { cva } from "class-variance-authority";
-import { useMediaQuery } from "react-responsive";
-import { navItems } from "~/lib/nav-items";
+import Link from 'next/link'
+import Image from 'next/image'
+import { usePathname } from 'next/navigation'
+import { cva } from 'class-variance-authority'
+import { useMediaQuery } from 'react-responsive'
+import { navItems } from '~/lib/nav-items'
 
 interface SidebarProps {
-  collapsed: boolean;
+  collapsed: boolean
 }
 
 const sidebarClasses = cva(
-  "h-screen bg-neutral-900 text-white transition-all duration-300 ease-in-out",
+  'h-screen bg-neutral-900 text-white transition-all duration-300 ease-in-out',
   {
     variants: {
       collapsed: {
-        true: "w-32",
-        false: "w-64",
+        true: 'w-32',
+        false: 'w-64',
       },
     },
-  },
-);
+  }
+)
 
-const linkClasses = cva("flex items-center m-2 rounded-lg p-4 align-middle", {
+const linkClasses = cva('flex items-center m-2 rounded-lg p-4 align-middle', {
   variants: {
     active: {
-      true: "bg-neutral-800",
-      false: "hover:bg-neutral-800",
+      true: 'bg-neutral-800',
+      false: 'hover:bg-neutral-800',
     },
     collapsed: {
-      true: "justify-center",
-      false: "justify-start",
+      true: 'justify-center',
+      false: 'justify-start',
     },
   },
-});
+})
 
 export function Sidebar({ collapsed }: SidebarProps) {
-  const pathname = usePathname();
-  const isMediumScreen = useMediaQuery({ minWidth: 768 });
+  const pathname = usePathname()
+  const isMediumScreen = useMediaQuery({ minWidth: 768 })
 
   return (
     <aside className={sidebarClasses({ collapsed })}>
@@ -75,5 +75,5 @@ export function Sidebar({ collapsed }: SidebarProps) {
         </div>
       </nav>
     </aside>
-  );
+  )
 }

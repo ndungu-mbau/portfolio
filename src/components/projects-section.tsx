@@ -1,42 +1,42 @@
-"use client";
+'use client'
 
-import { motion } from "framer-motion";
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
-import { Button } from "~/components/ui/button";
-import { Badge } from "~/components/ui/badge";
-import { ExternalLink, Github } from "lucide-react";
-import Image from "next/image";
+import { motion } from 'framer-motion'
+import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card'
+import { Button } from '~/components/ui/button'
+import { Badge } from '~/components/ui/badge'
+import { ExternalLink, Github } from 'lucide-react'
+import Image from 'next/image'
 
 export default function Projects() {
   const projects = [
     {
-      title: "E-Commerce Platform",
+      title: 'E-Commerce Platform',
       description:
-        "A full-stack e-commerce solution with React, Node.js, and Stripe integration. Features include user authentication, product management, order processing.",
-      image: "/placeholder.svg?height=300&width=500",
-      technologies: ["React", "Node.js", "MongoDB", "Stripe"],
-      liveUrl: "#",
-      githubUrl: "#",
+        'A full-stack e-commerce solution with React, Node.js, and Stripe integration. Features include user authentication, product management, order processing.',
+      image: '/placeholder.svg?height=300&width=500',
+      technologies: ['React', 'Node.js', 'MongoDB', 'Stripe'],
+      liveUrl: '#',
+      githubUrl: '#',
     },
     {
-      title: "Task Management App",
+      title: 'Task Management App',
       description:
-        "A collaborative task management application built with Next.js and real-time updates using Socket.io. Includes team collaboration features.",
-      image: "/placeholder.svg?height=300&width=500",
-      technologies: ["Next.js", "Socket.io", "PostgreSQL", "Tailwind"],
-      liveUrl: "#",
-      githubUrl: "#",
+        'A collaborative task management application built with Next.js and real-time updates using Socket.io. Includes team collaboration features.',
+      image: '/placeholder.svg?height=300&width=500',
+      technologies: ['Next.js', 'Socket.io', 'PostgreSQL', 'Tailwind'],
+      liveUrl: '#',
+      githubUrl: '#',
     },
     {
-      title: "Weather Dashboard",
+      title: 'Weather Dashboard',
       description:
-        "A beautiful weather dashboard with location-based forecasts, interactive maps, and detailed analytics using modern APIs.",
-      image: "/placeholder.svg?height=300&width=500",
-      technologies: ["Vue.js", "Chart.js", "Weather API", "CSS3"],
-      liveUrl: "#",
-      githubUrl: "#",
+        'A beautiful weather dashboard with location-based forecasts, interactive maps, and detailed analytics using modern APIs.',
+      image: '/placeholder.svg?height=300&width=500',
+      technologies: ['Vue.js', 'Chart.js', 'Weather API', 'CSS3'],
+      liveUrl: '#',
+      githubUrl: '#',
     },
-  ];
+  ]
 
   return (
     <section id="projects" className="bg-neutral-950 px-4 py-20">
@@ -69,7 +69,7 @@ export default function Projects() {
               <Card className="group overflow-hidden border-neutral-700 bg-neutral-900/50 transition-colors hover:border-neutral-500">
                 <div className="relative overflow-hidden">
                   <Image
-                    src={project.image || "/placeholder.svg"}
+                    src={project.image || '/placeholder.svg'}
                     alt={project.title}
                     width={500}
                     height={300}
@@ -138,5 +138,5 @@ export default function Projects() {
         </div>
       </div>
     </section>
-  );
+  )
 }
