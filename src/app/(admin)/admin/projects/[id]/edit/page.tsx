@@ -1,82 +1,82 @@
-"use client";
+'use client'
 
-import type React from "react";
+import type React from 'react'
 
-import { motion } from "framer-motion";
-import { useState, useEffect } from "react";
-import { useParams, useRouter } from "next/navigation";
-import Link from "next/link";
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
-import { Button } from "~/components/ui/button";
-import { Input } from "~/components/ui/input";
-import { Textarea } from "~/components/ui/textarea";
-import { Badge } from "~/components/ui/badge";
-import { TiptapEditor } from "~/components/ui/editor";
-import { ArrowLeft, Plus, X, Save } from "lucide-react";
+import { motion } from 'framer-motion'
+import { useState, useEffect } from 'react'
+import { useParams, useRouter } from 'next/navigation'
+import Link from 'next/link'
+import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card'
+import { Button } from '~/components/ui/button'
+import { Input } from '~/components/ui/input'
+import { Textarea } from '~/components/ui/textarea'
+import { Badge } from '~/components/ui/badge'
+import { TiptapEditor } from '~/components/ui/editor'
+import { ArrowLeft, Plus, X, Save } from 'lucide-react'
 
 // Mock project data - in a real app, this would come from a database
 const mockProjectData = {
-  "ecommerce-platform": {
-    id: "ecommerce-platform",
-    title: "E-Commerce Platform",
+  'ecommerce-platform': {
+    id: 'ecommerce-platform',
+    title: 'E-Commerce Platform',
     description:
-      "A full-stack e-commerce solution with React, Node.js, and Stripe integration.",
+      'A full-stack e-commerce solution with React, Node.js, and Stripe integration.',
     longDescription:
-      "This comprehensive e-commerce platform was built to handle high-traffic retail operations. It includes advanced features like inventory management, real-time analytics, multi-payment gateway integration, and a sophisticated admin dashboard.",
-    image: "/placeholder.svg?height=400&width=600",
-    technologies: ["React", "Node.js", "MongoDB", "Stripe", "Redis", "AWS"],
-    liveUrl: "https://example.com",
-    githubUrl: "https://github.com/example/ecommerce",
+      'This comprehensive e-commerce platform was built to handle high-traffic retail operations. It includes advanced features like inventory management, real-time analytics, multi-payment gateway integration, and a sophisticated admin dashboard.',
+    image: '/placeholder.svg?height=400&width=600',
+    technologies: ['React', 'Node.js', 'MongoDB', 'Stripe', 'Redis', 'AWS'],
+    liveUrl: 'https://example.com',
+    githubUrl: 'https://github.com/example/ecommerce',
     featured: true,
-    status: "Live",
-    duration: "6 months",
-    team: "4 developers",
-    year: "2024",
+    status: 'Live',
+    duration: '6 months',
+    team: '4 developers',
+    year: '2024',
     features: [
-      "User authentication and authorization",
-      "Product catalog with advanced filtering",
-      "Shopping cart and checkout process",
-      "Payment processing with Stripe",
-      "Order management system",
+      'User authentication and authorization',
+      'Product catalog with advanced filtering',
+      'Shopping cart and checkout process',
+      'Payment processing with Stripe',
+      'Order management system',
     ],
     challenges: [
-      "Handling high-traffic loads during peak shopping seasons",
-      "Implementing complex product variations and pricing rules",
-      "Ensuring PCI compliance for payment processing",
+      'Handling high-traffic loads during peak shopping seasons',
+      'Implementing complex product variations and pricing rules',
+      'Ensuring PCI compliance for payment processing',
     ],
   },
-};
+}
 
 export default function EditProjectPage() {
-  const params = useParams();
-  const router = useRouter();
-  const projectId = params.id as string;
+  const params = useParams()
+  const router = useRouter()
+  const projectId = params.id as string
 
   const [formData, setFormData] = useState({
-    title: "",
-    description: "",
-    longDescription: "",
-    image: "",
-    liveUrl: "",
-    githubUrl: "",
-    status: "Development",
+    title: '',
+    description: '',
+    longDescription: '',
+    image: '',
+    liveUrl: '',
+    githubUrl: '',
+    status: 'Development',
     featured: false,
-    duration: "",
-    team: "",
-    year: "",
-  });
-  const [technologies, setTechnologies] = useState<string[]>([]);
-  const [newTech, setNewTech] = useState("");
-  const [features, setFeatures] = useState<string[]>([]);
-  const [newFeature, setNewFeature] = useState("");
-  const [challenges, setChallenges] = useState<string[]>([]);
-  const [newChallenge, setNewChallenge] = useState("");
-  const [loading, setLoading] = useState(true);
+    duration: '',
+    team: '',
+    year: '',
+  })
+  const [technologies, setTechnologies] = useState<string[]>([])
+  const [newTech, setNewTech] = useState('')
+  const [features, setFeatures] = useState<string[]>([])
+  const [newFeature, setNewFeature] = useState('')
+  const [challenges, setChallenges] = useState<string[]>([])
+  const [newChallenge, setNewChallenge] = useState('')
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     // Load project data
     const projectData =
-      mockProjectData[projectId as keyof typeof mockProjectData];
+      mockProjectData[projectId as keyof typeof mockProjectData]
     if (projectData) {
       setFormData({
         title: projectData.title,
@@ -90,86 +90,86 @@ export default function EditProjectPage() {
         duration: projectData.duration,
         team: projectData.team,
         year: projectData.year,
-      });
-      setTechnologies(projectData.technologies);
-      setFeatures(projectData.features);
-      setChallenges(projectData.challenges);
+      })
+      setTechnologies(projectData.technologies)
+      setFeatures(projectData.features)
+      setChallenges(projectData.challenges)
     }
-    setLoading(false);
-  }, [projectId]);
+    setLoading(false)
+  }, [projectId])
 
   const handleInputChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >,
+    >
   ) => {
-    const { name, value, type } = e.target;
+    const { name, value, type } = e.target
     setFormData((prev) => ({
       ...prev,
       [name]:
-        type === "checkbox" ? (e.target as HTMLInputElement).checked : value,
-    }));
-  };
+        type === 'checkbox' ? (e.target as HTMLInputElement).checked : value,
+    }))
+  }
 
   const handleLongDescriptionChange = (content: string) => {
     setFormData((prev) => ({
       ...prev,
       longDescription: content,
-    }));
-  };
+    }))
+  }
 
   const addTechnology = () => {
     if (newTech.trim() && !technologies.includes(newTech.trim())) {
-      setTechnologies([...technologies, newTech.trim()]);
-      setNewTech("");
+      setTechnologies([...technologies, newTech.trim()])
+      setNewTech('')
     }
-  };
+  }
 
   const removeTechnology = (tech: string) => {
-    setTechnologies(technologies.filter((t) => t !== tech));
-  };
+    setTechnologies(technologies.filter((t) => t !== tech))
+  }
 
   const addFeature = () => {
     if (newFeature.trim()) {
-      setFeatures([...features, newFeature.trim()]);
-      setNewFeature("");
+      setFeatures([...features, newFeature.trim()])
+      setNewFeature('')
     }
-  };
+  }
 
   const removeFeature = (index: number) => {
-    setFeatures(features.filter((_, i) => i !== index));
-  };
+    setFeatures(features.filter((_, i) => i !== index))
+  }
 
   const addChallenge = () => {
     if (newChallenge.trim()) {
-      setChallenges([...challenges, newChallenge.trim()]);
-      setNewChallenge("");
+      setChallenges([...challenges, newChallenge.trim()])
+      setNewChallenge('')
     }
-  };
+  }
 
   const removeChallenge = (index: number) => {
-    setChallenges(challenges.filter((_, i) => i !== index));
-  };
+    setChallenges(challenges.filter((_, i) => i !== index))
+  }
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault()
     // Here you would typically update the database
-    console.log("Updated project data:", {
+    console.log('Updated project data:', {
       ...formData,
       technologies,
       features,
       challenges,
-    });
-    alert("Project updated successfully!");
-    router.push("/admin/projects");
-  };
+    })
+    alert('Project updated successfully!')
+    router.push('/admin/projects')
+  }
 
   if (loading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-neutral-950">
         <div className="text-white">Loading...</div>
       </div>
-    );
+    )
   }
 
   return (
@@ -383,7 +383,7 @@ export default function EditProjectPage() {
                     placeholder="Add technology"
                     className="border-neutral-600 bg-neutral-800/50 text-white placeholder:text-neutral-500"
                     onKeyPress={(e) =>
-                      e.key === "Enter" && (e.preventDefault(), addTechnology())
+                      e.key === 'Enter' && (e.preventDefault(), addTechnology())
                     }
                   />
                   <Button
@@ -428,7 +428,7 @@ export default function EditProjectPage() {
                     placeholder="Add feature"
                     className="border-neutral-600 bg-neutral-800/50 text-white placeholder:text-neutral-500"
                     onKeyPress={(e) =>
-                      e.key === "Enter" && (e.preventDefault(), addFeature())
+                      e.key === 'Enter' && (e.preventDefault(), addFeature())
                     }
                   />
                   <Button
@@ -474,7 +474,7 @@ export default function EditProjectPage() {
                     placeholder="Add challenge"
                     className="border-neutral-600 bg-neutral-800/50 text-white placeholder:text-neutral-500"
                     onKeyPress={(e) =>
-                      e.key === "Enter" && (e.preventDefault(), addChallenge())
+                      e.key === 'Enter' && (e.preventDefault(), addChallenge())
                     }
                   />
                   <Button
@@ -529,5 +529,5 @@ export default function EditProjectPage() {
         </motion.div>
       </div>
     </div>
-  );
+  )
 }

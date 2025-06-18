@@ -1,23 +1,23 @@
-"use client";
+'use client'
 
-import { motion } from "framer-motion";
-import { ArrowDown, Github, Linkedin, Mail } from "lucide-react";
-import { Button } from "~/components/ui/button";
-import TypewriterEffect from "~/components/ui/typewriter-effect";
+import { motion } from 'framer-motion'
+import { ArrowDown, Github, Linkedin, Mail } from 'lucide-react'
+import { Button } from '~/components/ui/button'
+import TypewriterEffect from '~/components/ui/typewriter-effect'
 
 export default function Hero() {
   const technologies = [
-    "React",
-    "Next.js",
-    "TypeScript",
-    "Node.js",
-    "Python",
-    "PostgreSQL",
-    "AWS",
-    "Docker",
-    "GraphQL",
-    "Tailwind CSS",
-  ];
+    'React',
+    'Next.js',
+    'TypeScript',
+    'Node.js',
+    'Python',
+    'PostgreSQL',
+    'AWS',
+    'Docker',
+    'GraphQL',
+    'Tailwind CSS',
+  ]
 
   return (
     <section className="relative flex min-h-screen items-center justify-center overflow-hidden bg-neutral-950 px-4">
@@ -55,7 +55,7 @@ export default function Hero() {
           transition={{ duration: 0.8 }}
         >
           <h1 className="mb-6 text-5xl font-bold text-white md:text-7xl">
-            Hi, I&apos;m{" "}
+            Hi, I&apos;m{' '}
             <span className="bg-gradient-to-r from-blue-500 to-blue-400 bg-clip-text text-transparent">
               Nelson Mbau
             </span>
@@ -146,5 +146,5 @@ export default function Hero() {
         </motion.div>
       </div>
     </section>
-  );
+  )
 }

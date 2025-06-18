@@ -1,10 +1,10 @@
-import { HydrateClient } from "~/trpc/server";
+import { HydrateClient } from '~/trpc/server'
 
-import Hero from "~/components/hero-section";
-import About from "~/components/about-section";
-import Skills from "~/components/skills-section";
-import Projects from "~/components/projects-section";
-import Contact from "~/components/contact-section";
+import Hero from '~/components/hero-section'
+import About from '~/components/about-section'
+import Skills from '~/components/skills-section'
+import Projects from '~/components/projects-section'
+import Contact from '~/components/contact-section'
 
 export default async function Home() {
   return (
@@ -17,5 +17,5 @@ export default async function Home() {
         <Contact />
       </main>
     </HydrateClient>
-  );
+  )
 }

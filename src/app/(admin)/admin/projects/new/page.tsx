@@ -1,106 +1,106 @@
-"use client";
+'use client'
 
-import type React from "react";
+import type React from 'react'
 
-import { motion } from "framer-motion";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
-import { Button } from "~/components/ui/button";
-import { Input } from "~/components/ui/input";
-import { Textarea } from "~/components/ui/textarea";
-import { Badge } from "~/components/ui/badge";
-import { ArrowLeft, Plus, X, Save } from "lucide-react";
-import { TiptapEditor } from "~/components/ui/editor";
+import { motion } from 'framer-motion'
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import Link from 'next/link'
+import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card'
+import { Button } from '~/components/ui/button'
+import { Input } from '~/components/ui/input'
+import { Textarea } from '~/components/ui/textarea'
+import { Badge } from '~/components/ui/badge'
+import { ArrowLeft, Plus, X, Save } from 'lucide-react'
+import { TiptapEditor } from '~/components/ui/editor'
 
 export default function NewProjectPage() {
-  const router = useRouter();
+  const router = useRouter()
   const [formData, setFormData] = useState({
-    title: "",
-    description: "",
-    longDescription: "",
-    image: "",
-    liveUrl: "",
-    githubUrl: "",
-    status: "Development",
+    title: '',
+    description: '',
+    longDescription: '',
+    image: '',
+    liveUrl: '',
+    githubUrl: '',
+    status: 'Development',
     featured: false,
-    duration: "",
-    team: "",
+    duration: '',
+    team: '',
     year: new Date().getFullYear().toString(),
-  });
-  const [technologies, setTechnologies] = useState<string[]>([]);
-  const [newTech, setNewTech] = useState("");
-  const [features, setFeatures] = useState<string[]>([]);
-  const [newFeature, setNewFeature] = useState("");
-  const [challenges, setChallenges] = useState<string[]>([]);
-  const [newChallenge, setNewChallenge] = useState("");
+  })
+  const [technologies, setTechnologies] = useState<string[]>([])
+  const [newTech, setNewTech] = useState('')
+  const [features, setFeatures] = useState<string[]>([])
+  const [newFeature, setNewFeature] = useState('')
+  const [challenges, setChallenges] = useState<string[]>([])
+  const [newChallenge, setNewChallenge] = useState('')
 
   const handleInputChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >,
+    >
   ) => {
-    const { name, value, type } = e.target;
+    const { name, value, type } = e.target
     setFormData((prev) => ({
       ...prev,
       [name]:
-        type === "checkbox" ? (e.target as HTMLInputElement).checked : value,
-    }));
-  };
+        type === 'checkbox' ? (e.target as HTMLInputElement).checked : value,
+    }))
+  }
 
   const handleLongDescriptionChange = (content: string) => {
     setFormData((prev) => ({
       ...prev,
       longDescription: content,
-    }));
-  };
+    }))
+  }
 
   const addTechnology = () => {
     if (newTech.trim() && !technologies.includes(newTech.trim())) {
-      setTechnologies([...technologies, newTech.trim()]);
-      setNewTech("");
+      setTechnologies([...technologies, newTech.trim()])
+      setNewTech('')
     }
-  };
+  }
 
   const removeTechnology = (tech: string) => {
-    setTechnologies(technologies.filter((t) => t !== tech));
-  };
+    setTechnologies(technologies.filter((t) => t !== tech))
+  }
 
   const addFeature = () => {
     if (newFeature.trim()) {
-      setFeatures([...features, newFeature.trim()]);
-      setNewFeature("");
+      setFeatures([...features, newFeature.trim()])
+      setNewFeature('')
     }
-  };
+  }
 
   const removeFeature = (index: number) => {
-    setFeatures(features.filter((_, i) => i !== index));
-  };
+    setFeatures(features.filter((_, i) => i !== index))
+  }
 
   const addChallenge = () => {
     if (newChallenge.trim()) {
-      setChallenges([...challenges, newChallenge.trim()]);
-      setNewChallenge("");
+      setChallenges([...challenges, newChallenge.trim()])
+      setNewChallenge('')
     }
-  };
+  }
 
   const removeChallenge = (index: number) => {
-    setChallenges(challenges.filter((_, i) => i !== index));
-  };
+    setChallenges(challenges.filter((_, i) => i !== index))
+  }
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault()
     // Here you would typically save to a database
-    console.log("Project data:", {
+    console.log('Project data:', {
       ...formData,
       technologies,
       features,
       challenges,
-    });
-    alert("Project created successfully!");
-    router.push("/admin/projects");
-  };
+    })
+    alert('Project created successfully!')
+    router.push('/admin/projects')
+  }
 
   return (
     <div className="min-h-screen bg-neutral-950">
@@ -315,7 +315,7 @@ export default function NewProjectPage() {
                     placeholder="Add technology"
                     className="border-neutral-600 bg-neutral-800/50 text-white placeholder:text-neutral-500"
                     onKeyPress={(e) =>
-                      e.key === "Enter" && (e.preventDefault(), addTechnology())
+                      e.key === 'Enter' && (e.preventDefault(), addTechnology())
                     }
                   />
                   <Button
@@ -360,7 +360,7 @@ export default function NewProjectPage() {
                     placeholder="Add feature"
                     className="border-neutral-600 bg-neutral-800/50 text-white placeholder:text-neutral-500"
                     onKeyPress={(e) =>
-                      e.key === "Enter" && (e.preventDefault(), addFeature())
+                      e.key === 'Enter' && (e.preventDefault(), addFeature())
                     }
                   />
                   <Button
@@ -406,7 +406,7 @@ export default function NewProjectPage() {
                     placeholder="Add challenge"
                     className="border-neutral-600 bg-neutral-800/50 text-white placeholder:text-neutral-500"
                     onKeyPress={(e) =>
-                      e.key === "Enter" && (e.preventDefault(), addChallenge())
+                      e.key === 'Enter' && (e.preventDefault(), addChallenge())
                     }
                   />
                   <Button
@@ -461,5 +461,5 @@ export default function NewProjectPage() {
         </motion.div>
       </div>
     </div>
-  );
+  )
 }
