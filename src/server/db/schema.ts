@@ -1,5 +1,5 @@
 import { relations, sql } from "drizzle-orm";
-import { index, pgTableCreator, primaryKey } from "drizzle-orm/pg-core";
+import { index, pgEnum, pgTableCreator, primaryKey } from "drizzle-orm/pg-core";
 import type { AdapterAccount } from "next-auth/adapters";
 
 /**
@@ -8,7 +8,25 @@ import type { AdapterAccount } from "next-auth/adapters";
  *
  * @see https://orm.drizzle.team/docs/goodies#multi-project-schema
  */
-export const createTable = pgTableCreator((name) => `portforlio_${name}`);
+
+export const createTable = pgTableCreator((name) => `portfolio_${name}`);
+
+export const projectStatus = pgEnum("project_status", [
+  "Development",
+  "Beta",
+  "Live",
+  "Archived",
+]);
+
+export const technologyCategory = pgEnum("technology_category", [
+  "Frontend",
+  "Backend",
+  "Database",
+  "Cloud",
+  "DevOps",
+]);
+
+// Drizzle schema definitions
 
 export const users = createTable("user", (d) => ({
   id: d.uuid().notNull().primaryKey().defaultRandom(),
@@ -21,10 +39,6 @@ export const users = createTable("user", (d) => ({
     })
     .default(sql`CURRENT_TIMESTAMP`),
   image: d.varchar({ length: 255 }),
-}));
-
-export const usersRelations = relations(users, ({ many }) => ({
-  accounts: many(accounts),
 }));
 
 export const accounts = createTable(
@@ -51,10 +65,6 @@ export const accounts = createTable(
   ],
 );
 
-export const accountsRelations = relations(accounts, ({ one }) => ({
-  user: one(users, { fields: [accounts.userId], references: [users.id] }),
-}));
-
 export const sessions = createTable(
   "session",
   (d) => ({
@@ -68,10 +78,6 @@ export const sessions = createTable(
   (t) => [index("t_user_id_idx").on(t.userId)],
 );
 
-export const sessionsRelations = relations(sessions, ({ one }) => ({
-  user: one(users, { fields: [sessions.userId], references: [users.id] }),
-}));
-
 export const verificationTokens = createTable(
   "verification_token",
   (d) => ({
@@ -82,52 +88,130 @@ export const verificationTokens = createTable(
   (t) => [primaryKey({ columns: [t.identifier, t.token] })],
 );
 
-export const projects = createTable("project", (d) => ({
+export const uploads = createTable("upload", (d) => ({
   id: d.uuid().notNull().primaryKey().defaultRandom(),
-  name: d.varchar({ length: 255 }).notNull(),
-  description: d.text(),
-  url: d.varchar({ length: 255 }).notNull(),
-  github: d.varchar({ length: 255 }),
-  image: d.varchar({ length: 255 }),
-  featured: d.boolean().default(false),
+  name: d.text().notNull(),
+  url: d.text().notNull(),
+  key: d.text().notNull(),
+  size: d.text().notNull(),
   createdAt: d
-    .timestamp({
-      mode: "date",
-      withTimezone: true,
-    })
+    .timestamp({ mode: "date", withTimezone: true })
     .default(sql`CURRENT_TIMESTAMP`),
+  updatedAt: d
+    .timestamp({ mode: "date", withTimezone: true })
+    .$onUpdateFn(() => sql`CURRENT_TIMESTAMP`),
 }));
 
 export const technologies = createTable("technology", (d) => ({
   id: d.uuid().notNull().primaryKey().defaultRandom(),
-  name: d.varchar({ length: 255 }).notNull(),
-  description: d.text(),
-  url: d.varchar({ length: 255 }).notNull(),
-  github: d.varchar({ length: 255 }),
+  name: d.text().notNull(),
+  category: technologyCategory().notNull(),
+  url: d.text(),
+  github: d.text(),
+  image: d
+    .uuid()
+    .notNull()
+    .references(() => uploads.id),
+  createdAt: d
+    .timestamp({ mode: "date", withTimezone: true })
+    .default(sql`CURRENT_TIMESTAMP`),
+  updatedAt: d
+    .timestamp({ mode: "date", withTimezone: true })
+    .$onUpdateFn(() => sql`CURRENT_TIMESTAMP`),
 }));
 
-export const projectTechnologies = createTable(
-  "project_technology",
-  (d) => ({
-    id: d.uuid().notNull().primaryKey().defaultRandom(),
-    projectId: d
-      .uuid()
-      .notNull()
-      .references(() => projects.id, { onDelete: "cascade" }),
-    technologyId: d
-      .uuid()
-      .notNull()
-      .references(() => technologies.id, { onDelete: "cascade" }),
+export const projects = createTable("project", (d) => ({
+  id: d.uuid().notNull().primaryKey().defaultRandom(),
+  title: d.text().notNull(),
+  description: d.text().notNull(),
+  longDescription: d.text().notNull(),
+  image: d
+    .uuid()
+    .notNull()
+    .references(() => uploads.id),
+  liveUrl: d.text(),
+  githubUrl: d.text().notNull(),
+  status: projectStatus().notNull().default("Development"),
+  featured: d.boolean().notNull().default(false),
+  duration: d.text().notNull(),
+  year: d.text().notNull(),
+  features: d.jsonb("features").notNull().$type<{ text: string }[]>(),
+  challenges: d.jsonb("challenges").notNull().$type<{ text: string }[]>(),
+  gallery: d
+    .uuid("gallery")
+    .notNull()
+    .references(() => uploads.id)
+    .array(),
+  createdAt: d
+    .timestamp({ mode: "date", withTimezone: true })
+    .default(sql`CURRENT_TIMESTAMP`),
+  updatedAt: d
+    .timestamp({ mode: "date", withTimezone: true })
+    .$onUpdateFn(() => sql`CURRENT_TIMESTAMP`),
+}));
+
+export const projectTechnologies = createTable("project_technologies", (d) => ({
+  projectId: d
+    .uuid()
+    .notNull()
+    .references(() => projects.id, { onDelete: "cascade" }),
+  technologyId: d
+    .uuid()
+    .notNull()
+    .references(() => technologies.id, { onDelete: "cascade" }),
+  createdAt: d
+    .timestamp({ mode: "date", withTimezone: true })
+    .default(sql`CURRENT_TIMESTAMP`),
+  updatedAt: d
+    .timestamp({ mode: "date", withTimezone: true })
+    .$onUpdateFn(() => sql`CURRENT_TIMESTAMP`),
+}), (t) => [
+  primaryKey({ columns: [t.projectId, t.technologyId] }),
+  index("project_technologies_project_id_idx").on(t.projectId),
+]);
+
+// Relations
+export const usersRelations = relations(users, ({ many }) => ({
+  accounts: many(accounts),
+}));
+
+export const accountsRelations = relations(accounts, ({ one }) => ({
+  user: one(users, { fields: [accounts.userId], references: [users.id] }),
+}));
+
+export const sessionsRelations = relations(sessions, ({ one }) => ({
+  user: one(users, { fields: [sessions.userId], references: [users.id] }),
+}));
+
+export const uploadsRelations = relations(uploads, ({ one }) => ({
+  project: one(projects, {
+    fields: [uploads.id],
+    references: [projects.image],
   }),
-  (t) => [index("project_technology_project_id_idx").on(t.projectId)],
+  technology: one(technologies, {
+    fields: [uploads.id],
+    references: [technologies.image],
+  }),
+}));
+
+export const technologiesRelations = relations(
+  technologies,
+  ({ many, one }) => ({
+    projectTechnologies: many(projectTechnologies),
+    image: one(uploads, {
+      fields: [technologies.image],
+      references: [uploads.id],
+    }),
+  }),
 );
 
-export const projectsRelations = relations(projects, ({ many }) => ({
-  technologies: many(projectTechnologies),
-}));
-
-export const technologiesRelations = relations(technologies, ({ many }) => ({
-  projects: many(projectTechnologies),
+export const projectsRelations = relations(projects, ({ many, one }) => ({
+  projectTechnologies: many(projectTechnologies),
+  image: one(uploads, {
+    fields: [projects.image],
+    references: [uploads.id],
+  }),
+  gallery: many(uploads),
 }));
 
 export const projectTechnologiesRelations = relations(
