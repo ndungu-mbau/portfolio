@@ -1,12 +1,6 @@
-<<<<<<< HEAD
-import { relations, sql } from "drizzle-orm";
-import { index, pgEnum, pgTableCreator, primaryKey } from "drizzle-orm/pg-core";
-import type { AdapterAccount } from "next-auth/adapters";
-=======
 import { relations, sql } from 'drizzle-orm'
 import { index, pgEnum, pgTableCreator, primaryKey } from 'drizzle-orm/pg-core'
 import type { AdapterAccount } from 'next-auth/adapters'
->>>>>>> feat/backend
 
 /**
  * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
@@ -14,28 +8,6 @@ import type { AdapterAccount } from 'next-auth/adapters'
  *
  * @see https://orm.drizzle.team/docs/goodies#multi-project-schema
  */
-<<<<<<< HEAD
-
-export const createTable = pgTableCreator((name) => `portfolio_${name}`);
-
-export const projectStatus = pgEnum("project_status", [
-  "Development",
-  "Beta",
-  "Live",
-  "Archived",
-]);
-
-export const technologyCategory = pgEnum("technology_category", [
-  "Frontend",
-  "Backend",
-  "Database",
-  "Cloud",
-  "DevOps",
-]);
-
-// Drizzle schema definitions
-=======
->>>>>>> feat/backend
 
 export const createTable = pgTableCreator((name) => `portfolio_${name}`)
 
@@ -67,11 +39,7 @@ export const users = createTable('user', (d) => ({
     })
     .default(sql`CURRENT_TIMESTAMP`),
   image: d.varchar({ length: 255 }),
-<<<<<<< HEAD
-}));
-=======
 }))
->>>>>>> feat/backend
 
 export const accounts = createTable(
   'account',
@@ -93,15 +61,9 @@ export const accounts = createTable(
   }),
   (t) => [
     primaryKey({ columns: [t.provider, t.providerAccountId] }),
-<<<<<<< HEAD
-    index("account_user_id_idx").on(t.userId),
-  ],
-);
-=======
     index('account_user_id_idx').on(t.userId),
   ]
 )
->>>>>>> feat/backend
 
 export const sessions = createTable(
   'session',
@@ -113,13 +75,8 @@ export const sessions = createTable(
       .references(() => users.id),
     expires: d.timestamp({ mode: 'date', withTimezone: true }).notNull(),
   }),
-<<<<<<< HEAD
-  (t) => [index("t_user_id_idx").on(t.userId)],
-);
-=======
   (t) => [index('t_user_id_idx').on(t.userId)]
 )
->>>>>>> feat/backend
 
 export const verificationTokens = createTable(
   'verification_token',
@@ -131,32 +88,19 @@ export const verificationTokens = createTable(
   (t) => [primaryKey({ columns: [t.identifier, t.token] })]
 )
 
-<<<<<<< HEAD
-export const uploads = createTable("upload", (d) => ({
-=======
 export const uploads = createTable('upload', (d) => ({
->>>>>>> feat/backend
   id: d.uuid().notNull().primaryKey().defaultRandom(),
   name: d.text().notNull(),
   url: d.text().notNull(),
   key: d.text().notNull(),
   size: d.text().notNull(),
   createdAt: d
-<<<<<<< HEAD
-    .timestamp({ mode: "date", withTimezone: true })
-    .default(sql`CURRENT_TIMESTAMP`),
-  updatedAt: d
-    .timestamp({ mode: "date", withTimezone: true })
-    .$onUpdateFn(() => sql`CURRENT_TIMESTAMP`),
-}));
-=======
     .timestamp({ mode: 'date', withTimezone: true })
     .default(sql`CURRENT_TIMESTAMP`),
   updatedAt: d
     .timestamp({ mode: 'date', withTimezone: true })
     .$onUpdateFn(() => sql`CURRENT_TIMESTAMP`),
 }))
->>>>>>> feat/backend
 
 export const technologies = createTable('technology', (d) => ({
   id: d.uuid().notNull().primaryKey().defaultRandom(),
@@ -169,100 +113,6 @@ export const technologies = createTable('technology', (d) => ({
     .notNull()
     .references(() => uploads.id),
   createdAt: d
-<<<<<<< HEAD
-    .timestamp({ mode: "date", withTimezone: true })
-    .default(sql`CURRENT_TIMESTAMP`),
-  updatedAt: d
-    .timestamp({ mode: "date", withTimezone: true })
-    .$onUpdateFn(() => sql`CURRENT_TIMESTAMP`),
-}));
-
-export const projects = createTable("project", (d) => ({
-  id: d.uuid().notNull().primaryKey().defaultRandom(),
-  title: d.text().notNull(),
-  description: d.text().notNull(),
-  longDescription: d.text().notNull(),
-  image: d
-    .uuid()
-    .notNull()
-    .references(() => uploads.id),
-  liveUrl: d.text(),
-  githubUrl: d.text().notNull(),
-  status: projectStatus().notNull().default("Development"),
-  featured: d.boolean().notNull().default(false),
-  duration: d.text().notNull(),
-  year: d.text().notNull(),
-  features: d.jsonb("features").notNull().$type<{ text: string }[]>(),
-  challenges: d.jsonb("challenges").notNull().$type<{ text: string }[]>(),
-  gallery: d
-    .uuid("gallery")
-    .notNull()
-    .references(() => uploads.id)
-    .array(),
-  createdAt: d
-    .timestamp({ mode: "date", withTimezone: true })
-    .default(sql`CURRENT_TIMESTAMP`),
-  updatedAt: d
-    .timestamp({ mode: "date", withTimezone: true })
-    .$onUpdateFn(() => sql`CURRENT_TIMESTAMP`),
-}));
-
-export const projectTechnologies = createTable("project_technologies", (d) => ({
-  projectId: d
-    .uuid()
-    .notNull()
-    .references(() => projects.id, { onDelete: "cascade" }),
-  technologyId: d
-    .uuid()
-    .notNull()
-    .references(() => technologies.id, { onDelete: "cascade" }),
-  createdAt: d
-    .timestamp({ mode: "date", withTimezone: true })
-    .default(sql`CURRENT_TIMESTAMP`),
-  updatedAt: d
-    .timestamp({ mode: "date", withTimezone: true })
-    .$onUpdateFn(() => sql`CURRENT_TIMESTAMP`),
-}), (t) => [
-  primaryKey({ columns: [t.projectId, t.technologyId] }),
-  index("project_technologies_project_id_idx").on(t.projectId),
-]);
-
-// Relations
-export const usersRelations = relations(users, ({ many }) => ({
-  accounts: many(accounts),
-}));
-
-export const accountsRelations = relations(accounts, ({ one }) => ({
-  user: one(users, { fields: [accounts.userId], references: [users.id] }),
-}));
-
-export const sessionsRelations = relations(sessions, ({ one }) => ({
-  user: one(users, { fields: [sessions.userId], references: [users.id] }),
-}));
-
-export const uploadsRelations = relations(uploads, ({ one }) => ({
-  project: one(projects, {
-    fields: [uploads.id],
-    references: [projects.image],
-  }),
-  technology: one(technologies, {
-    fields: [uploads.id],
-    references: [technologies.image],
-  }),
-}));
-
-export const technologiesRelations = relations(
-  technologies,
-  ({ many, one }) => ({
-    projectTechnologies: many(projectTechnologies),
-    image: one(uploads, {
-      fields: [technologies.image],
-      references: [uploads.id],
-    }),
-  }),
-);
-
-=======
     .timestamp({ mode: 'date', withTimezone: true })
     .default(sql`CURRENT_TIMESTAMP`),
   updatedAt: d
@@ -359,7 +209,6 @@ export const technologiesRelations = relations(
   })
 )
 
->>>>>>> feat/backend
 export const projectsRelations = relations(projects, ({ many, one }) => ({
   projectTechnologies: many(projectTechnologies),
   image: one(uploads, {
@@ -367,11 +216,7 @@ export const projectsRelations = relations(projects, ({ many, one }) => ({
     references: [uploads.id],
   }),
   gallery: many(uploads),
-<<<<<<< HEAD
-}));
-=======
 }))
->>>>>>> feat/backend
 
 export const projectTechnologiesRelations = relations(
   projectTechnologies,
