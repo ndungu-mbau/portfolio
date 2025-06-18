@@ -1,11 +1,11 @@
 {
-  "id": "e7a07671-6a3b-4227-9e48-6ef1f7ef0f9a",
+  "id": "363b7ba8-f531-4145-8afb-4a81b70c4ac0",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
-    "public.portforlio_account": {
-      "name": "portforlio_account",
+    "public.portfolio_account": {
+      "name": "portfolio_account",
       "schema": "",
       "columns": {
         "userId": {
@@ -93,10 +93,10 @@
         }
       },
       "foreignKeys": {
-        "portforlio_account_userId_portforlio_user_id_fk": {
-          "name": "portforlio_account_userId_portforlio_user_id_fk",
-          "tableFrom": "portforlio_account",
-          "tableTo": "portforlio_user",
+        "portfolio_account_userId_portfolio_user_id_fk": {
+          "name": "portfolio_account_userId_portfolio_user_id_fk",
+          "tableFrom": "portfolio_account",
+          "tableTo": "portfolio_user",
           "columnsFrom": [
             "userId"
           ],
@@ -108,8 +108,8 @@
         }
       },
       "compositePrimaryKeys": {
-        "portforlio_account_provider_providerAccountId_pk": {
-          "name": "portforlio_account_provider_providerAccountId_pk",
+        "portfolio_account_provider_providerAccountId_pk": {
+          "name": "portfolio_account_provider_providerAccountId_pk",
           "columns": [
             "provider",
             "providerAccountId"
@@ -121,17 +121,10 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.portforlio_project_technology": {
-      "name": "portforlio_project_technology",
+    "public.portfolio_project_technologies": {
+      "name": "portfolio_project_technologies",
       "schema": "",
       "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
         "projectId": {
           "name": "projectId",
           "type": "uuid",
@@ -143,11 +136,24 @@
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {
-        "project_technology_project_id_idx": {
-          "name": "project_technology_project_id_idx",
+        "project_technologies_project_id_idx": {
+          "name": "project_technologies_project_id_idx",
           "columns": [
             {
               "expression": "projectId",
@@ -163,10 +169,10 @@
         }
       },
       "foreignKeys": {
-        "portforlio_project_technology_projectId_portforlio_project_id_fk": {
-          "name": "portforlio_project_technology_projectId_portforlio_project_id_fk",
-          "tableFrom": "portforlio_project_technology",
-          "tableTo": "portforlio_project",
+        "portfolio_project_technologies_projectId_portfolio_project_id_fk": {
+          "name": "portfolio_project_technologies_projectId_portfolio_project_id_fk",
+          "tableFrom": "portfolio_project_technologies",
+          "tableTo": "portfolio_project",
           "columnsFrom": [
             "projectId"
           ],
@@ -176,10 +182,10 @@
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
-        "portforlio_project_technology_technologyId_portforlio_technology_id_fk": {
-          "name": "portforlio_project_technology_technologyId_portforlio_technology_id_fk",
-          "tableFrom": "portforlio_project_technology",
-          "tableTo": "portforlio_technology",
+        "portfolio_project_technologies_technologyId_portfolio_technology_id_fk": {
+          "name": "portfolio_project_technologies_technologyId_portfolio_technology_id_fk",
+          "tableFrom": "portfolio_project_technologies",
+          "tableTo": "portfolio_technology",
           "columnsFrom": [
             "technologyId"
           ],
@@ -190,14 +196,22 @@
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {},
+      "compositePrimaryKeys": {
+        "portfolio_project_technologies_projectId_technologyId_pk": {
+          "name": "portfolio_project_technologies_projectId_technologyId_pk",
+          "columns": [
+            "projectId",
+            "technologyId"
+          ]
+        }
+      },
       "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.portforlio_project": {
-      "name": "portforlio_project",
+    "public.portfolio_project": {
+      "name": "portfolio_project",
       "schema": "",
       "columns": {
         "id": {
@@ -207,9 +221,9 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
-        "name": {
-          "name": "name",
-          "type": "varchar(255)",
+        "title": {
+          "name": "title",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
         },
@@ -217,32 +231,76 @@
           "name": "description",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
-        "url": {
-          "name": "url",
-          "type": "varchar(255)",
+        "longDescription": {
+          "name": "longDescription",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
         },
-        "github": {
-          "name": "github",
-          "type": "varchar(255)",
+        "image": {
+          "name": "image",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "liveUrl": {
+          "name": "liveUrl",
+          "type": "text",
           "primaryKey": false,
           "notNull": false
         },
-        "image": {
-          "name": "image",
-          "type": "varchar(255)",
+        "githubUrl": {
+          "name": "githubUrl",
+          "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "project_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'Development'"
         },
         "featured": {
           "name": "featured",
           "type": "boolean",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "default": false
+        },
+        "duration": {
+          "name": "duration",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "year": {
+          "name": "year",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "features": {
+          "name": "features",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "challenges": {
+          "name": "challenges",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "gallery": {
+          "name": "gallery",
+          "type": "uuid[]",
+          "primaryKey": false,
+          "notNull": false
         },
         "createdAt": {
           "name": "createdAt",
@@ -250,18 +308,38 @@
           "primaryKey": false,
           "notNull": false,
           "default": "CURRENT_TIMESTAMP"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},
-      "foreignKeys": {},
+      "foreignKeys": {
+        "portfolio_project_image_portfolio_upload_id_fk": {
+          "name": "portfolio_project_image_portfolio_upload_id_fk",
+          "tableFrom": "portfolio_project",
+          "tableTo": "portfolio_upload",
+          "columnsFrom": [
+            "image"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.portforlio_session": {
-      "name": "portforlio_session",
+    "public.portfolio_session": {
+      "name": "portfolio_session",
       "schema": "",
       "columns": {
         "sessionToken": {
@@ -301,10 +379,10 @@
         }
       },
       "foreignKeys": {
-        "portforlio_session_userId_portforlio_user_id_fk": {
-          "name": "portforlio_session_userId_portforlio_user_id_fk",
-          "tableFrom": "portforlio_session",
-          "tableTo": "portforlio_user",
+        "portfolio_session_userId_portfolio_user_id_fk": {
+          "name": "portfolio_session_userId_portfolio_user_id_fk",
+          "tableFrom": "portfolio_session",
+          "tableTo": "portfolio_user",
           "columnsFrom": [
             "userId"
           ],
@@ -321,8 +399,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.portforlio_technology": {
-      "name": "portforlio_technology",
+    "public.portfolio_technology": {
+      "name": "portfolio_technology",
       "schema": "",
       "columns": {
         "id": {
@@ -334,25 +412,116 @@
         },
         "name": {
           "name": "name",
-          "type": "varchar(255)",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
         },
-        "description": {
-          "name": "description",
+        "category": {
+          "name": "category",
+          "type": "technology_category",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "url": {
+          "name": "url",
           "type": "text",
           "primaryKey": false,
           "notNull": false
         },
-        "url": {
-          "name": "url",
-          "type": "varchar(255)",
+        "github": {
+          "name": "github",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "image": {
+          "name": "image",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
-        "github": {
-          "name": "github",
-          "type": "varchar(255)",
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "portfolio_technology_image_portfolio_upload_id_fk": {
+          "name": "portfolio_technology_image_portfolio_upload_id_fk",
+          "tableFrom": "portfolio_technology",
+          "tableTo": "portfolio_upload",
+          "columnsFrom": [
+            "image"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.portfolio_upload": {
+      "name": "portfolio_upload",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "url": {
+          "name": "url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "key": {
+          "name": "key",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "size": {
+          "name": "size",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": false
         }
@@ -365,8 +534,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.portforlio_user": {
-      "name": "portforlio_user",
+    "public.portfolio_user": {
+      "name": "portfolio_user",
       "schema": "",
       "columns": {
         "id": {
@@ -410,8 +579,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.portforlio_verification_token": {
-      "name": "portforlio_verification_token",
+    "public.portfolio_verification_token": {
+      "name": "portfolio_verification_token",
       "schema": "",
       "columns": {
         "identifier": {
@@ -436,8 +605,8 @@
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {
-        "portforlio_verification_token_identifier_token_pk": {
-          "name": "portforlio_verification_token_identifier_token_pk",
+        "portfolio_verification_token_identifier_token_pk": {
+          "name": "portfolio_verification_token_identifier_token_pk",
           "columns": [
             "identifier",
             "token"
@@ -450,7 +619,29 @@
       "isRLSEnabled": false
     }
   },
-  "enums": {},
+  "enums": {
+    "public.project_status": {
+      "name": "project_status",
+      "schema": "public",
+      "values": [
+        "Development",
+        "Beta",
+        "Live",
+        "Archived"
+      ]
+    },
+    "public.technology_category": {
+      "name": "technology_category",
+      "schema": "public",
+      "values": [
+        "Frontend",
+        "Backend",
+        "Database",
+        "Cloud",
+        "DevOps"
+      ]
+    }
+  },
   "schemas": {},
   "sequences": {},
   "roles": {},
