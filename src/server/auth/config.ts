@@ -1,14 +1,15 @@
-import { DrizzleAdapter } from '@auth/drizzle-adapter'
-import { type DefaultSession, type NextAuthConfig } from 'next-auth'
-import GithubProvider from 'next-auth/providers/github'
+import { DrizzleAdapter } from "@auth/drizzle-adapter";
+import { type DefaultSession, type NextAuthConfig } from "next-auth";
+import GithubProvider from "next-auth/providers/github";
+import { env } from "~/env";
 
-import { db } from '~/server/db'
+import { db } from "~/server/db";
 import {
   accounts,
   sessions,
   users,
   verificationTokens,
-} from '~/server/db/schema'
+} from "~/server/db/schema";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -16,13 +17,13 @@ import {
  *
  * @see https://next-auth.js.org/getting-started/typescript#module-augmentation
  */
-declare module 'next-auth' {
+declare module "next-auth" {
   interface Session extends DefaultSession {
     user: {
-      id: string
+      id: string;
       // ...other properties
       // role: UserRole;
-    } & DefaultSession['user']
+    } & DefaultSession["user"];
   }
 
   // interface User {
@@ -56,6 +57,13 @@ export const authConfig = {
     verificationTokensTable: verificationTokens,
   }),
   callbacks: {
+    signIn: ({ user, profile, account }) => {
+      console.log({ user, profile, account });
+      return (
+        user.email === env.AUTH_VALID_EMAIL ||
+        profile?.email === env.AUTH_VALID_EMAIL
+      );
+    },
     session: ({ session, user }) => ({
       ...session,
       user: {
@@ -64,4 +72,4 @@ export const authConfig = {
       },
     }),
   },
-} satisfies NextAuthConfig
+} satisfies NextAuthConfig;
