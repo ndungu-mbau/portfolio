@@ -1,19 +1,35 @@
-import { HomeIcon, InfoIcon, BriefcaseIcon } from "lucide-react";
+import {
+  HomeIcon,
+  MailCheckIcon,
+  LayoutDashboardIcon,
+  DrillIcon,
+  PackageCheckIcon,
+} from 'lucide-react'
 
 export const navItems = [
   {
-    label: "Dashboard",
-    href: "/admin",
+    label: 'Home',
+    href: '/',
     icon: HomeIcon,
   },
   {
-    label: "Projects",
-    href: "/admin/projects",
-    icon: BriefcaseIcon,
+    label: 'Dashboard',
+    href: '/admin',
+    icon: LayoutDashboardIcon,
   },
   {
-    label: "Messages",
-    href: "/admin/messages",
-    icon: InfoIcon,
+    label: 'Projects',
+    href: '/admin/projects',
+    icon: DrillIcon,
   },
-];
+  {
+    label: 'Technologies',
+    href: '/admin/technologies',
+    icon: PackageCheckIcon,
+  },
+  {
+    label: 'Messages',
+    href: '/admin/messages',
+    icon: MailCheckIcon,
+  },
+]

@@ -1,30 +1,30 @@
-"use client";
+'use client'
 
-import { motion } from "framer-motion";
-import { ArrowDown, Github, Linkedin, Mail } from "lucide-react";
-import { Button } from "~/components/ui/button";
-import TypewriterEffect from "~/components/ui/typewriter-effect";
+import { motion } from 'framer-motion'
+import { ArrowDown, Github, Linkedin, Mail } from 'lucide-react'
+import { Button } from '~/components/ui/button'
+import TypewriterEffect from '~/components/ui/typewriter-effect'
 
 export default function Hero() {
   const technologies = [
-    "React",
-    "Next.js",
-    "TypeScript",
-    "Node.js",
-    "Python",
-    "PostgreSQL",
-    "AWS",
-    "Docker",
-    "GraphQL",
-    "Tailwind CSS",
-  ];
+    'React',
+    'Next.js',
+    'TypeScript',
+    'Node.js',
+    'Python',
+    'PostgreSQL',
+    'AWS',
+    'Docker',
+    'GraphQL',
+    'Tailwind CSS',
+  ]
 
   return (
     <section className="relative flex min-h-screen items-center justify-center overflow-hidden bg-neutral-950 px-4">
       {/* Background Animation */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -inset-10 opacity-30">
-          {[...(Array(50) as number[])].map((_, i) => (
+          {[...(Array(100) as number[])].map((_, i) => (
             <motion.div
               key={i}
               className="absolute rounded-full bg-neutral-400"
@@ -55,7 +55,7 @@ export default function Hero() {
           transition={{ duration: 0.8 }}
         >
           <h1 className="mb-6 text-5xl font-bold text-white md:text-7xl">
-            Hi, I&apos;m{" "}
+            Hi, I&apos;m{' '}
             <span className="bg-gradient-to-r from-blue-500 to-blue-400 bg-clip-text text-transparent">
               Nelson Mbau
             </span>
@@ -92,14 +92,14 @@ export default function Hero() {
         >
           <Button
             size="lg"
-            className="bg-blue-500 px-8 py-3 font-medium text-black hover:bg-blue-600"
+            className="bg-blue-500 px-8 py-3 font-medium text-white hover:bg-blue-600"
           >
             View My Work
           </Button>
           <Button
             variant="outline"
             size="lg"
-            className="border-neutral-600 px-8 py-3 text-neutral-300 hover:bg-neutral-800 hover:text-white"
+            className="border border-neutral-500 px-8 py-3 text-neutral-800 hover:bg-neutral-800 hover:text-white"
           >
             Download CV
           </Button>
@@ -146,5 +146,5 @@ export default function Hero() {
         </motion.div>
       </div>
     </section>
-  );
+  )
 }
