@@ -24,7 +24,7 @@ export default function Hero() {
       {/* Background Animation */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -inset-10 opacity-30">
-          {[...(Array(50) as number[])].map((_, i) => (
+          {[...(Array(100) as number[])].map((_, i) => (
             <motion.div
               key={i}
               className="absolute rounded-full bg-neutral-400"
@@ -92,14 +92,14 @@ export default function Hero() {
         >
           <Button
             size="lg"
-            className="bg-blue-500 px-8 py-3 font-medium text-black hover:bg-blue-600"
+            className="bg-blue-500 px-8 py-3 font-medium text-white hover:bg-blue-600"
           >
             View My Work
           </Button>
           <Button
             variant="outline"
             size="lg"
-            className="border-neutral-600 px-8 py-3 text-neutral-300 hover:bg-neutral-800 hover:text-white"
+            className="border border-neutral-500 px-8 py-3 text-neutral-800 hover:bg-neutral-800 hover:text-white"
           >
             Download CV
           </Button>
