@@ -3,6 +3,8 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import { Toaster } from 'sonner'
 
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+
 const inter = Inter({ subsets: ['latin'] })
 
 import { TRPCReactProvider } from '~/trpc/react'
@@ -34,6 +36,7 @@ export default function RootLayout({
         <body className={inter.className}>
           <Toaster />
           {children}
+          <ReactQueryDevtools />
         </body>
       </TRPCReactProvider>
     </html>
