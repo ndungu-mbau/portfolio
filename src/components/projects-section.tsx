@@ -6,38 +6,13 @@ import { Button } from '~/components/ui/button'
 import { Badge } from '~/components/ui/badge'
 import { ExternalLink, Github } from 'lucide-react'
 import Image from 'next/image'
+import type { RouterOutputs } from '~/trpc/react'
 
-export default function Projects() {
-  const projects = [
-    {
-      title: 'E-Commerce Platform',
-      description:
-        'A full-stack e-commerce solution with React, Node.js, and Stripe integration. Features include user authentication, product management, order processing.',
-      image: '/placeholder.svg?height=300&width=500',
-      technologies: ['React', 'Node.js', 'MongoDB', 'Stripe'],
-      liveUrl: '#',
-      githubUrl: '#',
-    },
-    {
-      title: 'Task Management App',
-      description:
-        'A collaborative task management application built with Next.js and real-time updates using Socket.io. Includes team collaboration features.',
-      image: '/placeholder.svg?height=300&width=500',
-      technologies: ['Next.js', 'Socket.io', 'PostgreSQL', 'Tailwind'],
-      liveUrl: '#',
-      githubUrl: '#',
-    },
-    {
-      title: 'Weather Dashboard',
-      description:
-        'A beautiful weather dashboard with location-based forecasts, interactive maps, and detailed analytics using modern APIs.',
-      image: '/placeholder.svg?height=300&width=500',
-      technologies: ['Vue.js', 'Chart.js', 'Weather API', 'CSS3'],
-      liveUrl: '#',
-      githubUrl: '#',
-    },
-  ]
-
+export default function Projects({
+  projects,
+}: {
+  projects: RouterOutputs['projects']['getProjectsByFeatured']
+}) {
   return (
     <section id="projects" className="bg-neutral-950 px-4 py-20">
       <div className="mx-auto max-w-6xl">
@@ -69,7 +44,7 @@ export default function Projects() {
               <Card className="group overflow-hidden border-neutral-700 bg-neutral-900/50 transition-colors hover:border-neutral-500">
                 <div className="relative overflow-hidden">
                   <Image
-                    src={project.image || '/placeholder.svg'}
+                    src={project.image?.url || '/placeholder.svg'}
                     alt={project.title}
                     width={500}
                     height={300}
@@ -90,32 +65,34 @@ export default function Projects() {
                   </p>
 
                   <div className="flex flex-wrap gap-2">
-                    {project.technologies.map((tech) => (
+                    {project.projectTechnologies.map((tech) => (
                       <Badge
-                        key={tech}
+                        key={tech.technology.id}
                         variant="secondary"
                         className="border-neutral-600 bg-neutral-800 text-xs text-neutral-200"
                       >
-                        {tech}
+                        {tech.technology.name}
                       </Badge>
                     ))}
                   </div>
 
                   <div className="flex gap-3 pt-2">
-                    <Button
-                      size="sm"
-                      className="flex-1 bg-white text-black hover:bg-neutral-200"
-                      asChild
-                    >
-                      <a
-                        href={project.liveUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                    {project.liveUrl && (
+                      <Button
+                        size="sm"
+                        className="flex-1 bg-white text-black hover:bg-neutral-200"
+                        asChild
                       >
-                        <ExternalLink className="mr-2 h-4 w-4" />
-                        Live Demo
-                      </a>
-                    </Button>
+                        <a
+                          href={project.liveUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <ExternalLink className="mr-2 h-4 w-4" />
+                          Live Demo
+                        </a>
+                      </Button>
+                    )}
                     <Button
                       size="sm"
                       variant="outline"

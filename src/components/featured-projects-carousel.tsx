@@ -12,29 +12,13 @@ import {
   ExternalLink,
   Github,
   Calendar,
-  Users,
   ChevronLeft,
   ChevronRight,
 } from 'lucide-react'
-
-interface Project {
-  id: string
-  title: string
-  description: string
-  longDescription: string
-  image: string
-  technologies: string[]
-  liveUrl: string
-  githubUrl: string
-  featured: boolean
-  status: string
-  duration: string
-  team: string
-  year: string
-}
+import type { RouterOutputs } from '~/trpc/react'
 
 interface FeaturedProjectsCarouselProps {
-  projects: Project[]
+  projects: RouterOutputs['projects']['getProjectsByFeatured']
 }
 
 export default function FeaturedProjectsCarousel({
@@ -95,7 +79,9 @@ export default function FeaturedProjectsCarousel({
                 {/* Image Section */}
                 <div className="group relative overflow-hidden">
                   <Image
-                    src={projects[currentIndex]?.image ?? '/placeholder.svg'}
+                    src={
+                      projects[currentIndex]?.image?.url ?? '/placeholder.svg'
+                    }
                     alt={projects[currentIndex]?.title ?? ''}
                     width={600}
                     height={400}
@@ -158,26 +144,26 @@ export default function FeaturedProjectsCarousel({
                           Technologies
                         </h4>
                         <div className="flex flex-wrap gap-2">
-                          {projects[currentIndex]?.technologies
+                          {projects[currentIndex]?.projectTechnologies
                             .slice(0, 6)
                             .map((tech) => (
                               <Badge
-                                key={tech}
+                                key={tech.technology.id}
                                 variant="secondary"
                                 className="border-neutral-600 bg-neutral-800 text-sm text-neutral-200"
                               >
-                                {tech}
+                                {tech.technology.name}
                               </Badge>
                             ))}
-                          {projects[currentIndex]?.technologies?.length! >
-                            6 && (
+                          {projects[currentIndex]?.projectTechnologies
+                            ?.length! > 6 && (
                             <Badge
                               variant="secondary"
                               className="border-neutral-600 bg-neutral-800 text-sm text-neutral-200"
                             >
                               +
-                              {projects[currentIndex]?.technologies?.length! -
-                                6}
+                              {projects[currentIndex]?.projectTechnologies
+                                ?.length! - 6}
                             </Badge>
                           )}
                         </div>
@@ -188,10 +174,6 @@ export default function FeaturedProjectsCarousel({
                         <div className="flex items-center gap-2">
                           <Calendar size={16} />
                           <span>{projects[currentIndex]?.year}</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Users size={16} />
-                          <span>{projects[currentIndex]?.team}</span>
                         </div>
                       </div>
                     </CardContent>
@@ -208,20 +190,22 @@ export default function FeaturedProjectsCarousel({
                         View Details
                       </Link>
                     </Button>
-                    <Button
-                      size="lg"
-                      variant="outline"
-                      className="border-neutral-600 text-neutral-300 hover:bg-neutral-800"
-                      asChild
-                    >
-                      <a
-                        href={projects[currentIndex]?.liveUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                    {projects[currentIndex]?.liveUrl && (
+                      <Button
+                        size="lg"
+                        variant="outline"
+                        className="border-neutral-600 text-neutral-300 hover:bg-neutral-800"
+                        asChild
                       >
-                        <ExternalLink className="h-4 w-4" />
-                      </a>
-                    </Button>
+                        <a
+                          href={projects[currentIndex]?.liveUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <ExternalLink className="h-4 w-4" />
+                        </a>
+                      </Button>
+                    )}
                     <Button
                       size="lg"
                       variant="outline"
@@ -286,7 +270,7 @@ export default function FeaturedProjectsCarousel({
             whileTap={{ scale: 0.98 }}
           >
             <Image
-              src={project.image || '/placeholder.svg'}
+              src={project.image?.url || '/placeholder.svg'}
               alt={project.title}
               width={120}
               height={80}
