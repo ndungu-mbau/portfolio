@@ -4,37 +4,32 @@ import {
   LayoutDashboardIcon,
   DrillIcon,
   PackageCheckIcon,
-} from "lucide-react";
+} from 'lucide-react'
 
 export const navItems = [
   {
-    label: "Home",
-    href: "/",
+    label: 'Home',
+    href: '/',
     icon: HomeIcon,
   },
   {
-    label: "Home",
-    href: "/",
-    icon: HomeIcon,
-  },
-  {
-    label: "Dashboard",
-    href: "/admin",
+    label: 'Dashboard',
+    href: '/admin',
     icon: LayoutDashboardIcon,
   },
   {
-    label: "Projects",
-    href: "/admin/projects",
+    label: 'Projects',
+    href: '/admin/projects',
     icon: DrillIcon,
   },
   {
-    label: "Technologies",
-    href: "/admin/technologies",
+    label: 'Technologies',
+    href: '/admin/technologies',
     icon: PackageCheckIcon,
   },
   {
-    label: "Messages",
-    href: "/admin/messages",
+    label: 'Messages',
+    href: '/admin/messages',
     icon: MailCheckIcon,
   },
-];
+]
