@@ -3,6 +3,8 @@
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card'
 import { Badge } from '~/components/ui/badge'
 import { Button } from '~/components/ui/button'
@@ -74,9 +76,11 @@ export default function ProjectDetail({
                   </Badge>
                 </div>
 
-                <p className="mb-8 text-xl leading-relaxed text-neutral-400">
-                  {project.longDescription}
-                </p>
+                <div className="prose prose-invert mb-8 max-w-none text-neutral-400 prose-p:my-4 prose-p:text-xl prose-p:leading-relaxed prose-headings:mb-4 prose-headings:mt-8 prose-headings:text-white prose-ul:list-disc prose-ol:list-decimal prose-li:my-1 prose-a:text-blue-400 hover:prose-a:text-blue-300 prose-code:rounded-md prose-code:bg-neutral-800 prose-code:px-1.5 prose-code:py-0.5 prose-code:before:content-[''] prose-code:after:content-['']">
+                  <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                    {project.longDescription || ''}
+                  </ReactMarkdown>
+                </div>
 
                 <div className="mb-8 flex flex-wrap gap-4">
                   <div className="flex items-center gap-2 text-neutral-300">
@@ -124,7 +128,7 @@ export default function ProjectDetail({
 
               <div className="relative">
                 <Image
-                  src={project.image || '/placeholder.svg'}
+                  src={project.image.url || '/placeholder.svg'}
                   alt={project.title}
                   width={800}
                   height={500}
