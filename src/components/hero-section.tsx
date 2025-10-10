@@ -1,23 +1,18 @@
 'use client'
 
+import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { ArrowDown, Github, Linkedin, Mail } from 'lucide-react'
 import { Button } from '~/components/ui/button'
 import TypewriterEffect from '~/components/ui/typewriter-effect'
+import { api } from '~/trpc/react'
 
 export default function Hero() {
-  const technologies = [
-    'React',
-    'Next.js',
-    'TypeScript',
-    'Node.js',
-    'Python',
-    'PostgreSQL',
-    'AWS',
-    'Docker',
-    'GraphQL',
-    'Tailwind CSS',
-  ]
+  const { data: technologies = [] } =
+    api.technologies.getAllTechnologies.useQuery()
+
+  // Extract just the technology names for the typewriter effect
+  const technologyNames = technologies.map((tech) => tech.name)
 
   return (
     <section className="relative flex min-h-screen items-center justify-center overflow-hidden bg-neutral-950 px-4">
@@ -68,7 +63,7 @@ export default function Hero() {
               <span className="text-neutral-300">Specialized in</span>
               <div className="flex h-8 items-center">
                 <TypewriterEffect
-                  words={technologies}
+                  words={technologyNames}
                   className="text-lg md:text-xl"
                   typeSpeed={80}
                   deleteSpeed={40}
@@ -93,8 +88,9 @@ export default function Hero() {
           <Button
             size="lg"
             className="bg-blue-500 px-8 py-3 font-medium text-white hover:bg-blue-600"
+            asChild
           >
-            View My Work
+            <Link href="/projects">View My Work</Link>
           </Button>
           <Button
             variant="outline"
@@ -112,20 +108,26 @@ export default function Hero() {
           className="mb-12 flex justify-center space-x-6"
         >
           <a
-            href="#"
+            href="https://github.com/ndungu-mbau"
             className="text-neutral-500 transition-colors hover:text-white"
+            target="_blank"
+            rel="noopener noreferrer"
           >
             <Github size={24} />
           </a>
           <a
-            href="#"
+            href="https://www.linkedin.com/in/nelson-mbau-31788a136/"
             className="text-neutral-500 transition-colors hover:text-white"
+            target="_blank"
+            rel="noopener noreferrer"
           >
             <Linkedin size={24} />
           </a>
           <a
-            href="#"
+            href="mailto:mbau.ndungu@gmail.com"
             className="text-neutral-500 transition-colors hover:text-white"
+            target="_blank"
+            rel="noopener noreferrer"
           >
             <Mail size={24} />
           </a>

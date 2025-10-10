@@ -56,7 +56,7 @@ export default function FloatingNavbar() {
           href="/"
           className="mr-6 text-lg font-bold text-white transition-colors hover:text-neutral-300"
         >
-          John Doe
+          Nelson Mbau
         </Link>
 
         {/* Navigation Items */}
