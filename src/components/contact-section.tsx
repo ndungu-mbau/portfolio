@@ -10,6 +10,8 @@ import { Textarea } from '~/components/ui/textarea'
 import { Mail, MapPin, Phone } from 'lucide-react'
 import { useState } from 'react'
 
+import { api } from '~/trpc/react'
+
 export default function Contact() {
   const [formData, setFormData] = useState({
     name: '',
@@ -17,10 +19,12 @@ export default function Contact() {
     message: '',
   })
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const { mutateAsync: createMessage } =
+    api.messages.createMessage.useMutation()
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // Handle form submission here
-    console.log('Form submitted:', formData)
+    await createMessage(formData)
   }
 
   const handleChange = (
@@ -36,19 +40,19 @@ export default function Contact() {
     {
       icon: <Mail className="h-6 w-6 text-neutral-300" />,
       title: 'Email',
-      value: 'john.doe@example.com',
-      href: 'mailto:john.doe@example.com',
+      value: 'mbau.ndungu@gmail.com',
+      href: 'mailto:mbau.ndungu@gmail.com',
     },
     {
       icon: <Phone className="h-6 w-6 text-neutral-300" />,
       title: 'Phone',
-      value: '+1 (555) 123-4567',
-      href: 'tel:+15551234567',
+      value: '+254 719 420 491',
+      href: 'tel:+254719420491',
     },
     {
       icon: <MapPin className="h-6 w-6 text-neutral-300" />,
       title: 'Location',
-      value: 'San Francisco, CA',
+      value: 'Nairobi, Kenya',
       href: '#',
     },
   ]

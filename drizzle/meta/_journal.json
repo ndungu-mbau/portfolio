@@ -8,6 +8,13 @@
       "when": 1750255039363,
       "tag": "0000_illegal_zarek",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1760104517421,
+      "tag": "0001_long_wendigo",
+      "breakpoints": true
     }
   ]
 }

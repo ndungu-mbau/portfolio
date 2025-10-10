@@ -174,6 +174,19 @@ export const projectTechnologies = createTable(
   ]
 )
 
+export const messages = createTable('message', (d) => ({
+  id: d.uuid().notNull().primaryKey().defaultRandom(),
+  name: d.text().notNull(),
+  email: d.text().notNull(),
+  message: d.text().notNull(),
+  createdAt: d
+    .timestamp({ mode: 'date', withTimezone: true })
+    .default(sql`CURRENT_TIMESTAMP`),
+  updatedAt: d
+    .timestamp({ mode: 'date', withTimezone: true })
+    .$onUpdateFn(() => sql`CURRENT_TIMESTAMP`),
+}))
+
 // Relations
 export const usersRelations = relations(users, ({ many }) => ({
   accounts: many(accounts),
