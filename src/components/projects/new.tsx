@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 import { toast } from 'sonner'
 import { motion } from 'framer-motion'
 
@@ -19,15 +20,19 @@ import { Badge } from '~/components/ui/badge'
 import { TiptapEditor } from '~/components/ui/editor'
 import { api, type RouterOutputs } from '~/trpc/react'
 import { cn } from '~/lib/utils'
-import { Save, X } from 'lucide-react'
+import { Save, Upload, X } from 'lucide-react'
 import { Textarea } from '../ui/textarea'
+import { GalleryUpload } from './gallery-upload'
+import { UploadButton } from '~/lib/uploadthing'
+import { Label } from '../ui/label'
+import { Select, SelectTrigger, SelectContent, SelectItem } from '../ui/select'
 
 // Type for the project form data
 interface ProjectFormData {
   title: string
   description: string
   longDescription: string
-  image: string
+  image: string | undefined
   liveUrl: string
   githubUrl: string
   status: 'Development' | 'Beta' | 'Live' | 'Archived'
@@ -152,7 +157,7 @@ export default function NewProjectPage({
         })),
       }
 
-      createProject(submissionData)
+      createProject({ ...submissionData, image: submissionData.image ?? '' })
     } catch (error) {
       console.error('Error creating project:', error)
       toast.error('Failed to create project')
@@ -202,20 +207,29 @@ export default function NewProjectPage({
 
                   {/* Project Status */}
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-neutral-300">
-                      Status <span className="text-red-500">*</span>
-                    </label>
-                    <select
+                    <Label htmlFor="status" className="text-white">
+                      Category
+                    </Label>
+                    <Select
                       name="status"
                       value={formData.status}
-                      onChange={handleInputChange}
-                      className="w-full rounded-md border border-neutral-600 bg-neutral-800/50 px-3 py-2 text-white"
+                      onValueChange={(value: string) =>
+                        setFormData({
+                          ...formData,
+                          status: value as ProjectFormData['status'],
+                        })
+                      }
                     >
-                      <option value="Development">Development</option>
-                      <option value="Beta">Beta</option>
-                      <option value="Live">Live</option>
-                      <option value="Archived">Archived</option>
-                    </select>
+                      <SelectTrigger className="h-10 w-full rounded-md px-3 py-2 text-sm text-white placeholder:text-neutral-500 focus:ring-2 focus:ring-neutral-400 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50">
+                        <span>{formData.status ?? 'Select a status'}</span>
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Development">Development</SelectItem>
+                        <SelectItem value="Beta">Beta</SelectItem>
+                        <SelectItem value="Live">Live</SelectItem>
+                        <SelectItem value="Archived">Archived</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
 
                   {/* Featured */}
@@ -330,16 +344,83 @@ export default function NewProjectPage({
                   </div>
                 </div>
 
-                <div>
-                  <label className="mb-2 block text-sm font-medium text-neutral-300">
-                    Project Image URL
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-neutral-300">
+                    Project Image
                   </label>
-                  <Input
-                    name="image"
-                    value={formData.image}
-                    onChange={handleInputChange}
-                    placeholder="https://example.com/image.jpg"
-                    className="border-neutral-600 bg-neutral-800/50 text-white placeholder:text-neutral-500"
+                  {formData.image ? (
+                    <div className="relative">
+                      <div className="relative h-40 w-full overflow-hidden rounded-lg border border-neutral-700">
+                        <Image
+                          src={formData.image}
+                          alt="Project preview"
+                          fill
+                          className="object-cover transition-transform duration-300 group-hover:scale-105"
+                          sizes="160px"
+                          height={500}
+                          width={800}
+                        />
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setFormData((prev) => ({ ...prev, image: '' }))
+                          }
+                          className="absolute top-2 right-2 rounded-full bg-red-600 p-1 text-white hover:bg-red-700"
+                        >
+                          <X className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-neutral-600 bg-neutral-800/50 p-8 text-center transition-colors hover:border-blue-500 hover:bg-neutral-800/70">
+                      <Upload className="mb-3 h-8 w-8 text-neutral-400" />
+                      <p className="mb-1 text-sm font-medium text-neutral-300">
+                        Upload Project Image
+                      </p>
+                      <p className="mb-3 text-xs text-neutral-500">
+                        PNG, JPG, GIF up to 4MB
+                      </p>
+                      <UploadButton
+                        endpoint="imageUploader"
+                        onClientUploadComplete={(res) => {
+                          if (res?.[0]?.url) {
+                            setFormData((prev) => ({
+                              ...prev,
+                              image:
+                                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access,
+                                (res?.[0]?.serverData?.file?.id as string) ??
+                                '',
+                            }))
+                            toast.success('Image uploaded successfully')
+                          }
+                        }}
+                        onUploadError={(error: Error) => {
+                          console.error('Upload Error:', error)
+                          toast.error('Upload failed', {
+                            description: error.message,
+                          })
+                        }}
+                        className="ut-button:bg-blue-600 ut-button:ut-readying:bg-blue-600/50 ut-button:ut-uploading:bg-blue-600/50"
+                        content={{
+                          button: 'Select Image',
+                          allowedContent: '',
+                        }}
+                      />
+                    </div>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-neutral-300">
+                    Gallery Images
+                  </label>
+                  <GalleryUpload
+                    onUploadComplete={(upload) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        gallery: [...prev.gallery, upload.id],
+                      }))
+                    }
                   />
                 </div>
               </CardContent>

@@ -17,6 +17,13 @@ const buttonVariants = cva(
           'border bg-white shadow-xs hover:bg-neutral-100 hover:text-neutral-900 dark:bg-neutral-200/30 dark:border-neutral-200 dark:hover:bg-neutral-200/50 dark:bg-neutral-950 dark:hover:bg-neutral-800 dark:hover:text-neutral-50 dark:dark:bg-neutral-800/30 dark:dark:border-neutral-800 dark:dark:hover:bg-neutral-800/50',
         secondary:
           'bg-neutral-100 text-neutral-900 shadow-xs hover:bg-neutral-100/80 dark:bg-neutral-800 dark:text-neutral-50 dark:hover:bg-neutral-800/80',
+        brand:
+          'bg-purple-500 text-white shadow-xs hover:bg-purple-500/90 focus-visible:ring-purple-500/20 dark:focus-visible:ring-purple-500/40 dark:bg-purple-500/60 dark:bg-purple-900 dark:hover:bg-purple-900/90 dark:focus-visible:ring-purple-900/20 dark:dark:focus-visible:ring-purple-900/40 dark:dark:bg-purple-900/60',
+        success:
+          'bg-green-500 text-white shadow-xs hover:bg-green-500/90 focus-visible:ring-green-500/20 dark:focus-visible:ring-green-500/40 dark:bg-green-500/60 dark:bg-green-900 dark:hover:bg-green-900/90 dark:focus-visible:ring-green-900/20 dark:dark:focus-visible:ring-green-900/40 dark:dark:bg-green-900/60',
+        warning:
+          'bg-yellow-500 text-white shadow-xs hover:bg-yellow-500/90 focus-visible:ring-yellow-500/20 dark:focus-visible:ring-yellow-500/40 dark:bg-yellow-500/60 dark:bg-yellow-900 dark:hover:bg-yellow-900/90 dark:focus-visible:ring-yellow-900/20 dark:dark:focus-visible:ring-yellow-900/40 dark:dark:bg-yellow-900/60',
+        info: 'bg-blue-500 text-white shadow-xs hover:bg-blue-500/90 focus-visible:ring-blue-500/20 dark:focus-visible:ring-blue-500/40 dark:bg-blue-500/60 dark:bg-blue-900 dark:hover:bg-blue-900/90 dark:focus-visible:ring-blue-900/20 dark:dark:focus-visible:ring-blue-900/40 dark:dark:bg-blue-900/60',
         ghost:
           'hover:bg-neutral-100 hover:text-neutral-900 dark:hover:bg-neutral-100/50 dark:hover:bg-neutral-800 dark:hover:text-neutral-50 dark:dark:hover:bg-neutral-800/50',
         link: 'text-neutral-900 underline-offset-4 hover:underline dark:text-neutral-50',

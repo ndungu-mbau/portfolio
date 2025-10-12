@@ -96,7 +96,11 @@ export const technologiesRouter = createTRPCRouter({
 
   getAllTechnologies: publicProcedure.query(async () => {
     try {
-      const technologies = await db.query.technologies.findMany()
+      const technologies = await db.query.technologies.findMany({
+        with: {
+          image: true,
+        },
+      })
       return technologies
     } catch (e) {
       console.error(e)
