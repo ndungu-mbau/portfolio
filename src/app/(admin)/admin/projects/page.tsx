@@ -1,96 +1,67 @@
-"use client";
+'use client'
 
-import { motion } from "framer-motion";
-import { useState } from "react";
-import Link from "next/link";
-import Image from "next/image";
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
-import { Button } from "~/components/ui/button";
-import { Badge } from "~/components/ui/badge";
-import { Input } from "~/components/ui/input";
-import { Plus, Edit, Trash2, Search, Eye } from "lucide-react";
-
-// Mock projects data
-const mockProjects = [
-  {
-    id: "ecommerce-platform",
-    title: "E-Commerce Platform",
-    description:
-      "A full-stack e-commerce solution with React, Node.js, and Stripe integration.",
-    image: "/placeholder.svg?height=200&width=300",
-    technologies: ["React", "Node.js", "MongoDB", "Stripe"],
-    status: "Live",
-    featured: true,
-    year: "2024",
-    createdAt: "2024-01-15",
-    updatedAt: "2024-01-20",
-  },
-  {
-    id: "task-management-app",
-    title: "Task Management App",
-    description:
-      "A collaborative task management application built with Next.js and real-time updates.",
-    image: "/placeholder.svg?height=200&width=300",
-    technologies: ["Next.js", "Socket.io", "PostgreSQL"],
-    status: "Live",
-    featured: true,
-    year: "2024",
-    createdAt: "2024-02-10",
-    updatedAt: "2024-02-15",
-  },
-  {
-    id: "weather-dashboard",
-    title: "Weather Dashboard",
-    description:
-      "A beautiful weather dashboard with location-based forecasts and interactive maps.",
-    image: "/placeholder.svg?height=200&width=300",
-    technologies: ["Vue.js", "Chart.js", "Weather API"],
-    status: "Live",
-    featured: false,
-    year: "2023",
-    createdAt: "2023-11-05",
-    updatedAt: "2023-11-10",
-  },
-  {
-    id: "blog-platform",
-    title: "Blog Platform",
-    description:
-      "A modern blog platform with markdown support and SEO optimization.",
-    image: "/placeholder.svg?height=200&width=300",
-    technologies: ["Next.js", "MDX", "Supabase"],
-    status: "Beta",
-    featured: false,
-    year: "2023",
-    createdAt: "2023-09-20",
-    updatedAt: "2023-10-01",
-  },
-];
+import { motion } from 'framer-motion'
+import { useState } from 'react'
+import Link from 'next/link'
+import Image from 'next/image'
+import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card'
+import { Button } from '~/components/ui/button'
+import { Badge } from '~/components/ui/badge'
+import { Input } from '~/components/ui/input'
+import { Plus, Edit, Trash2, Search, Eye, Loader2 } from 'lucide-react'
+import { DeleteConfirmation } from '~/components/delete-confirmation'
+import { api } from '~/trpc/react'
+import { toast } from 'sonner'
 
 export default function AdminProjectsPage() {
-  const [projects, setProjects] = useState(mockProjects);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState("all");
-  const [featuredFilter, setFeaturedFilter] = useState("all");
+  // Fetch projects using tRPC
+  const { data: projects = [], isLoading } =
+    api.projects.getAllProjects.useQuery()
+  const utils = api.useUtils()
 
-  const filteredProjects = projects.filter((project) => {
+  // Delete mutation
+  const { mutate: deleteProject, isPending: isDeleting } =
+    api.projects.deleteProject.useMutation({
+      onSuccess: () => {
+        toast.success('Project deleted successfully')
+        void utils.projects.invalidate()
+      },
+      onError: (error) => {
+        toast.error('Failed to delete project')
+        console.error('Error deleting project:', error)
+      },
+    })
+
+  // State for filters and search
+  const [searchTerm, setSearchTerm] = useState('')
+  const [statusFilter, setStatusFilter] = useState('all')
+  const [featuredFilter, setFeaturedFilter] = useState('all')
+
+  const filteredProjects = (projects || []).filter((project) => {
     const matchesSearch =
       project.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      project.description.toLowerCase().includes(searchTerm.toLowerCase());
+      project.description?.toLowerCase().includes(searchTerm.toLowerCase())
     const matchesStatus =
-      statusFilter === "all" || project.status.toLowerCase() === statusFilter;
+      statusFilter === 'all' ||
+      project.status?.toLowerCase() === statusFilter.toLowerCase()
     const matchesFeatured =
-      featuredFilter === "all" ||
-      (featuredFilter === "featured" && project.featured) ||
-      (featuredFilter === "not-featured" && !project.featured);
+      featuredFilter === 'all' ||
+      (featuredFilter === 'featured' && project.featured) ||
+      (featuredFilter === 'not-featured' && !project.featured)
 
-    return matchesSearch && matchesStatus && matchesFeatured;
-  });
+    return matchesSearch && matchesStatus && matchesFeatured
+  })
 
-  const handleDeleteProject = (projectId: string) => {
-    if (confirm("Are you sure want to delete this project?")) {
-      setProjects(projects.filter((p) => p.id !== projectId));
-    }
-  };
+  // Delete project handler is now handled by DeleteConfirmation component
+
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-white" />
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-neutral-950">
@@ -178,7 +149,7 @@ export default function AdminProjectsPage() {
                 <Card className="group overflow-hidden border-neutral-700 bg-neutral-900/50 transition-colors hover:border-neutral-500">
                   <div className="relative">
                     <Image
-                      src={project.image || "/placeholder.svg"}
+                      src={project.image?.url || '/placeholder.svg'}
                       alt={project.title}
                       width={300}
                       height={200}
@@ -193,11 +164,11 @@ export default function AdminProjectsPage() {
                       <Badge
                         variant="outline"
                         className={`text-xs ${
-                          project.status === "Live"
-                            ? "border-green-400/30 bg-green-400/10 text-green-400"
-                            : project.status === "Beta"
-                              ? "border-yellow-400/30 bg-yellow-400/10 text-yellow-400"
-                              : "border-blue-400/30 bg-blue-400/10 text-blue-400"
+                          project.status === 'Live'
+                            ? 'border-green-400/30 bg-green-400/10 text-green-400'
+                            : project.status === 'Beta'
+                              ? 'border-yellow-400/30 bg-yellow-400/10 text-yellow-400'
+                              : 'border-blue-400/30 bg-blue-400/10 text-blue-400'
                         }`}
                       >
                         {project.status}
@@ -216,33 +187,37 @@ export default function AdminProjectsPage() {
 
                   <CardContent className="space-y-4">
                     <div className="flex flex-wrap gap-1">
-                      {project.technologies.slice(0, 3).map((tech) => (
+                      {project.projectTechnologies.slice(0, 3).map((tech) => (
                         <Badge
-                          key={tech}
+                          key={tech.technology.id}
                           variant="secondary"
                           className="border-neutral-600 bg-neutral-800 text-xs text-neutral-200"
                         >
-                          {tech}
+                          {tech.technology.name}
                         </Badge>
                       ))}
-                      {project.technologies.length > 3 && (
+                      {project.projectTechnologies.length > 3 && (
                         <Badge
                           variant="secondary"
                           className="border-neutral-600 bg-neutral-800 text-xs text-neutral-200"
                         >
-                          +{project.technologies.length - 3}
+                          +{project.projectTechnologies.length - 3}
                         </Badge>
                       )}
                     </div>
 
                     <div className="text-xs text-neutral-500">
                       <p>
-                        Created:{" "}
-                        {new Date(project.createdAt).toLocaleDateString()}
+                        Created:{' '}
+                        {project.createdAt
+                          ? new Date(project.createdAt).toLocaleDateString()
+                          : ''}
                       </p>
                       <p>
-                        Updated:{" "}
-                        {new Date(project.updatedAt).toLocaleDateString()}
+                        Updated:{' '}
+                        {project.updatedAt
+                          ? new Date(project.updatedAt).toLocaleDateString()
+                          : ''}
                       </p>
                     </div>
 
@@ -268,14 +243,21 @@ export default function AdminProjectsPage() {
                           <Edit className="h-3 w-3" />
                         </Link>
                       </Button>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        className="border-red-600 text-red-400 hover:bg-red-600/10"
-                        onClick={() => handleDeleteProject(project.id)}
-                      >
-                        <Trash2 className="h-3 w-3" />
-                      </Button>
+                      <DeleteConfirmation
+                        onConfirm={() => deleteProject({ id: project.id })}
+                        isLoading={isDeleting}
+                        title={`Delete ${project.title}?`}
+                        description="This will permanently delete this project. This action cannot be undone."
+                        trigger={
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="border-red-600 text-red-300 hover:bg-red-800"
+                          >
+                            <Trash2 className="h-3 w-3" />
+                          </Button>
+                        }
+                      />
                     </div>
                   </CardContent>
                 </Card>
@@ -293,5 +275,5 @@ export default function AdminProjectsPage() {
         </motion.div>
       </div>
     </div>
-  );
+  )
 }

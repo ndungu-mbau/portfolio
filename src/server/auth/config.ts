@@ -1,6 +1,7 @@
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import { type DefaultSession, type NextAuthConfig } from "next-auth";
 import GithubProvider from "next-auth/providers/github";
+import { env } from "~/env";
 
 import { db } from "~/server/db";
 import {
@@ -56,6 +57,13 @@ export const authConfig = {
     verificationTokensTable: verificationTokens,
   }),
   callbacks: {
+    signIn: ({ user, profile, account }) => {
+      console.log({ user, profile, account });
+      return (
+        user.email === env.AUTH_VALID_EMAIL ||
+        profile?.email === env.AUTH_VALID_EMAIL
+      );
+    },
     session: ({ session, user }) => ({
       ...session,
       user: {

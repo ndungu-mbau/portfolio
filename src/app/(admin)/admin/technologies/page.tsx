@@ -1,79 +1,161 @@
-"use client"
+'use client'
 
-import type React from "react"
+import { motion } from 'framer-motion'
+import { useState } from 'react'
+import { toast } from 'sonner'
+import { UploadDropzone } from '~/lib/uploadthing'
 
-import { motion } from "framer-motion"
-import { useState } from "react"
-import Link from "next/link"
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card"
-import { Button } from "~/components/ui/button"
-import { Badge } from "~/components/ui/badge"
-import { Input } from "~/components/ui/input"
-import { ArrowLeft, Plus, Edit, Trash2, Search, Code, Palette, Server, Database, Cloud, Wrench } from "lucide-react"
-
-// Mock technologies data
-const mockTechnologies = [
-  { id: "react", name: "React", category: "Frontend", color: "blue", icon: Code, usageCount: 8 },
-  { id: "nextjs", name: "Next.js", category: "Frontend", color: "gray", icon: Code, usageCount: 6 },
-  { id: "typescript", name: "TypeScript", category: "Frontend", color: "blue", icon: Code, usageCount: 10 },
-  { id: "nodejs", name: "Node.js", category: "Backend", color: "green", icon: Server, usageCount: 7 },
-  { id: "python", name: "Python", category: "Backend", color: "yellow", icon: Server, usageCount: 5 },
-  { id: "postgresql", name: "PostgreSQL", category: "Database", color: "blue", icon: Database, usageCount: 4 },
-  { id: "mongodb", name: "MongoDB", category: "Database", color: "green", icon: Database, usageCount: 3 },
-  { id: "aws", name: "AWS", category: "Cloud", color: "orange", icon: Cloud, usageCount: 6 },
-  { id: "docker", name: "Docker", category: "DevOps", color: "blue", icon: Wrench, usageCount: 5 },
-  { id: "tailwind", name: "Tailwind CSS", category: "Frontend", color: "cyan", icon: Palette, usageCount: 9 },
-]
-
-const categories = ["All", "Frontend", "Backend", "Database", "Cloud", "DevOps"]
+import { Button } from '~/components/ui/button'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '~/components/ui/card'
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+} from '~/components/ui/drawer'
+import { Input } from '~/components/ui/input'
+import { Label } from '~/components/ui/label'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+} from '~/components/ui/select'
+import { Skeleton } from '~/components/ui/skeleton'
+import { api } from '~/trpc/react'
+import {
+  Code,
+  Cloud,
+  Database,
+  Edit2,
+  Plus,
+  Server,
+  Trash2,
+  Wrench,
+} from 'lucide-react'
+import Image from 'next/image'
 
 export default function AdminTechnologiesPage() {
-  const [technologies, setTechnologies] = useState(mockTechnologies)
-  const [searchTerm, setSearchTerm] = useState("")
-  const [categoryFilter, setCategoryFilter] = useState("All")
-  const [newTech, setNewTech] = useState({ name: "", category: "Frontend" })
-  const [showAddForm, setShowAddForm] = useState(false)
+  const [searchTerm, setSearchTerm] = useState('')
+  const [categoryFilter, setCategoryFilter] = useState('All')
+  const [newTech, setNewTech] = useState({
+    name: '',
+    category: 'Frontend',
+    url: '',
+    github: '',
+    image: '',
+  })
+  const [imageUrl, setImageUrl] = useState<string | null>(null)
+  const [open, setOpen] = useState(false)
+
+  // Fetch technologies using TRPC
+  const { data: technologies = [], isLoading } =
+    api.technologies.getAllTechnologies.useQuery()
 
   const filteredTechnologies = technologies.filter((tech) => {
-    const matchesSearch = tech.name.toLowerCase().includes(searchTerm.toLowerCase())
-    const matchesCategory = categoryFilter === "All" || tech.category === categoryFilter
+    const matchesSearch = tech.name
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase())
+    const matchesCategory =
+      categoryFilter === 'All' || tech.category === categoryFilter
     return matchesSearch && matchesCategory
   })
+
+  const utils = api.useUtils()
+
+  const { mutate: createTech } = api.technologies.createTechnology.useMutation({
+    onSuccess: () => {
+      setNewTech({
+        name: '',
+        category: 'Frontend',
+        url: '',
+        github: '',
+        image: '',
+      })
+      setImageUrl(null)
+      setOpen(false)
+      void utils.technologies.invalidate()
+      toast.success('Technology created successfully')
+    },
+    onError: (error) => {
+      console.error('Error creating technology:', error)
+      toast.error('Error creating technology')
+    },
+  })
+
+  const { mutate: deleteTech } = api.technologies.deleteTechnology.useMutation({
+    onSuccess: () => {
+      void utils.technologies.invalidate()
+      toast.success('Technology deleted successfully')
+    },
+    onError: (error) => {
+      console.error('Error deleting technology:', error)
+      toast.error('Error deleting technology')
+    },
+  })
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-neutral-950 p-8">
+        <div className="mx-auto max-w-6xl">
+          <div className="mb-8 flex items-center justify-between">
+            <Skeleton className="h-12 w-64" />
+            <Skeleton className="h-10 w-40" />
+          </div>
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <Skeleton key={i} className="h-32 w-full rounded-lg" />
+            ))}
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   const handleAddTechnology = (e: React.FormEvent) => {
     e.preventDefault()
     if (newTech.name.trim()) {
-      const newTechnology = {
-        id: newTech.name.toLowerCase().replace(/\s+/g, "-"),
+      createTech({
         name: newTech.name,
-        category: newTech.category,
-        color: "gray",
-        icon: Code,
-        usageCount: 0,
-      }
-      setTechnologies([...technologies, newTechnology])
-      setNewTech({ name: "", category: "Frontend" })
-      setShowAddForm(false)
+        category: newTech.category as
+          | 'Frontend'
+          | 'Backend'
+          | 'Database'
+          | 'Cloud'
+          | 'DevOps',
+        url: newTech.url,
+        github: newTech.github,
+        image: newTech.image ?? '',
+      })
     }
   }
 
-  const handleDeleteTechnology = (techId: string) => {
-    if (confirm("Are you sure want to delete this technology?")) {
-      setTechnologies(technologies.filter((t) => t.id !== techId))
+  const handleDeleteTechnology = (id: string) => {
+    if (confirm('Are you sure you want to delete this technology?')) {
+      deleteTech({ id })
     }
   }
 
   const getIconForCategory = (category: string) => {
     switch (category) {
-      case "Frontend":
+      case 'Frontend':
         return Code
-      case "Backend":
+      case 'Backend':
         return Server
-      case "Database":
+      case 'Database':
         return Database
-      case "Cloud":
+      case 'Cloud':
         return Cloud
-      case "DevOps":
+      case 'DevOps':
         return Wrench
       default:
         return Code
@@ -81,189 +163,283 @@ export default function AdminTechnologiesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-neutral-950">
-      <div className="max-w-6xl mx-auto px-4 py-8">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
-          {/* Header */}
-          <div className="flex items-center justify-between mb-8">
-            <div className="flex items-center gap-4">
-              <Button variant="ghost" className="text-neutral-400 hover:text-white" asChild>
-                <Link href="/admin">
-                  <ArrowLeft className="w-4 h-4 mr-2" />
-                  Back to Dashboard
-                </Link>
-              </Button>
-              <div>
-                <h1 className="text-3xl font-bold text-white">Manage Technologies</h1>
-                <p className="text-neutral-400">View and manage your technology stack</p>
-              </div>
-            </div>
-            <Button className="bg-white text-black hover:bg-neutral-200" onClick={() => setShowAddForm(!showAddForm)}>
-              <Plus className="w-4 h-4 mr-2" />
-              Add Technology
-            </Button>
+    <div className="min-h-screen bg-neutral-950 p-8">
+      <div className="mx-auto max-w-6xl">
+        <div className="mb-8 flex flex-col justify-between gap-4 md:flex-row md:items-center">
+          <div>
+            <h1 className="text-3xl font-bold text-white">Technologies</h1>
+            <p className="text-neutral-400">
+              View and manage your technology stack
+            </p>
           </div>
+          <Button
+            className="bg-white text-black hover:bg-neutral-200"
+            onClick={() => setOpen(true)}
+          >
+            <Plus className="mr-2 h-4 w-4" />
+            Add Technology
+          </Button>
+        </div>
 
-          {/* Add Technology Form */}
-          {showAddForm && (
-            <Card className="bg-neutral-900/50 border-neutral-700 mb-8">
-              <CardHeader>
-                <CardTitle className="text-white">Add New Technology</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <form onSubmit={handleAddTechnology} className="flex gap-4">
-                  <Input
-                    placeholder="Technology name"
-                    value={newTech.name}
-                    onChange={(e) => setNewTech({ ...newTech, name: e.target.value })}
-                    className="bg-neutral-800/50 border-neutral-600 text-white placeholder:text-neutral-500"
-                    required
-                  />
-                  <select
-                    value={newTech.category}
-                    onChange={(e) => setNewTech({ ...newTech, category: e.target.value })}
-                    className="px-3 py-2 bg-neutral-800/50 border border-neutral-200 border-neutral-600 rounded-md text-white dark:border-neutral-800"
-                  >
-                    {categories
-                      .filter((cat) => cat !== "All")
-                      .map((category) => (
-                        <option key={category} value={category}>
-                          {category}
-                        </option>
-                      ))}
-                  </select>
-                  <Button type="submit" className="bg-white text-black hover:bg-neutral-200">
-                    Add
-                  </Button>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    className="border-neutral-600 text-neutral-300"
-                    onClick={() => setShowAddForm(false)}
-                  >
-                    Cancel
-                  </Button>
-                </form>
-              </CardContent>
-            </Card>
-          )}
-
-          {/* Filters */}
-          <Card className="bg-neutral-900/50 border-neutral-700 mb-8">
-            <CardContent className="p-6">
-              <div className="flex flex-col md:flex-row gap-4">
-                <div className="flex-1">
-                  <div className="relative">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400" size={18} />
+        {/* Add Technology Drawer */}
+        <Drawer open={open} onOpenChange={setOpen} direction="right">
+          <DrawerContent className="border-neutral-700 bg-neutral-900">
+            <div className="mx-auto w-full max-w-sm">
+              <DrawerHeader>
+                <DrawerTitle className="text-white">
+                  Add New Technology
+                </DrawerTitle>
+                <DrawerDescription className="text-neutral-400">
+                  Add a new technology to your stack
+                </DrawerDescription>
+              </DrawerHeader>
+              <form onSubmit={handleAddTechnology} className="p-4 pb-0">
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="tech-name" className="text-white">
+                      Technology Name
+                    </Label>
                     <Input
-                      placeholder="Search technologies..."
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                      className="pl-10 bg-neutral-800/50 border-neutral-600 text-white placeholder:text-neutral-500"
+                      id="tech-name"
+                      placeholder="e.g. React, Node.js, etc."
+                      value={newTech.name}
+                      onChange={(e) =>
+                        setNewTech({ ...newTech, name: e.target.value })
+                      }
+                      className="border-neutral-600 bg-neutral-800/50 text-white placeholder:text-neutral-500"
+                      required
                     />
                   </div>
-                </div>
-                <div className="flex gap-2 flex-wrap">
-                  {categories.map((category) => (
-                    <Button
-                      key={category}
-                      variant={categoryFilter === category ? "default" : "outline"}
-                      size="sm"
-                      onClick={() => setCategoryFilter(category)}
-                      className={
-                        categoryFilter === category
-                          ? "bg-white text-black"
-                          : "border-neutral-600 text-neutral-300 hover:bg-neutral-800"
+                  <div className="space-y-2">
+                    <Label htmlFor="tech-category" className="text-white">
+                      Category
+                    </Label>
+                    <Select
+                      value={newTech.category}
+                      onValueChange={(v: string) =>
+                        setNewTech({ ...newTech, category: v })
                       }
                     >
-                      {category}
-                    </Button>
-                  ))}
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Technologies Grid */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            {filteredTechnologies.map((tech, index) => {
-              const IconComponent = tech.icon
-              return (
-                <motion.div
-                  key={tech.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: index * 0.05 }}
-                >
-                  <Card className="bg-neutral-900/50 border-neutral-700 hover:border-neutral-500 transition-colors group">
-                    <CardContent className="p-4">
-                      <div className="flex items-center justify-between mb-3">
-                        <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 bg-neutral-800 rounded-lg flex items-center justify-center">
-                            <IconComponent className="text-neutral-300" size={16} />
-                          </div>
-                          <div>
-                            <h3 className="text-white font-medium">{tech.name}</h3>
-                            <Badge variant="outline" className="border-neutral-600 text-neutral-400 text-xs mt-1">
-                              {tech.category}
-                            </Badge>
-                          </div>
-                        </div>
-                        <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                          <Button size="sm" variant="ghost" className="text-neutral-400 hover:text-white p-1">
-                            <Edit size={14} />
-                          </Button>
+                      <SelectTrigger className="h-10 w-full rounded-md px-3 py-2 text-sm text-white placeholder:text-neutral-500 focus:ring-2 focus:ring-neutral-400 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50">
+                        <span>{newTech.category ?? 'Select a category'}</span>
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Frontend">Frontend</SelectItem>
+                        <SelectItem value="Backend">Backend</SelectItem>
+                        <SelectItem value="Database">Database</SelectItem>
+                        <SelectItem value="Cloud">Cloud</SelectItem>
+                        <SelectItem value="DevOps">DevOps</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="tech-url" className="text-white">
+                      URL
+                    </Label>
+                    <Input
+                      id="tech-url"
+                      placeholder="https://example.com"
+                      value={newTech.url}
+                      onChange={(e) =>
+                        setNewTech({ ...newTech, url: e.target.value })
+                      }
+                      className="border-neutral-600 bg-neutral-800/50 text-white placeholder:text-neutral-500"
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="tech-github" className="text-white">
+                      GitHub
+                    </Label>
+                    <Input
+                      id="tech-github"
+                      placeholder="https://github.com/username/repo"
+                      value={newTech.github}
+                      onChange={(e) =>
+                        setNewTech({ ...newTech, github: e.target.value })
+                      }
+                      className="border-neutral-600 bg-neutral-800/50 text-white placeholder:text-neutral-500"
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-white">Technology Logo</Label>
+                    {imageUrl ? (
+                      <div className="mt-2">
+                        <div className="flex items-center justify-between">
+                          <Image
+                            src={imageUrl}
+                            alt="Uploaded logo"
+                            className="h-16 w-16 object-contain"
+                            height={480}
+                            width={600}
+                          />
                           <Button
-                            size="sm"
+                            type="button"
                             variant="ghost"
-                            className="text-neutral-400 hover:text-red-400 p-1"
-                            onClick={() => handleDeleteTechnology(tech.id)}
+                            size="sm"
+                            onClick={() => setImageUrl(null)}
+                            className="text-red-500 hover:text-red-600"
                           >
-                            <Trash2 size={14} />
+                            Change
                           </Button>
                         </div>
                       </div>
-                      <div className="text-xs text-neutral-500">
-                        Used in {tech.usageCount} project{tech.usageCount !== 1 ? "s" : ""}
-                      </div>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              )
-            })}
-          </div>
-
-          {filteredTechnologies.length === 0 && (
-            <div className="text-center py-12">
-              <p className="text-neutral-400 text-lg">No technologies found matching your criteria.</p>
-            </div>
-          )}
-
-          {/* Statistics */}
-          <Card className="bg-neutral-900/50 border-neutral-700 mt-8">
-            <CardHeader>
-              <CardTitle className="text-white">Technology Statistics</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-white">{technologies.length}</div>
-                  <div className="text-neutral-400 text-sm">Total Technologies</div>
+                    ) : (
+                      <UploadDropzone
+                        endpoint="imageUploader"
+                        onClientUploadComplete={([res]) => {
+                          console.log({ res })
+                          if (res?.url) {
+                            setImageUrl(res.url)
+                            setNewTech({
+                              ...newTech,
+                              // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+                              image: res?.serverData?.file?.id as string,
+                            })
+                            toast.success('Image uploaded successfully!')
+                          }
+                        }}
+                        onUploadError={(error: Error) => {
+                          console.error(error)
+                          toast.error('Error uploading image')
+                        }}
+                        className="ut-button:bg-white ut-button:text-black ut-button:hover:bg-neutral-200 ut-button:ut-uploading:bg-white/50"
+                      />
+                    )}
+                  </div>
                 </div>
-                {categories
-                  .filter((cat) => cat !== "All")
-                  .map((category) => (
-                    <div key={category} className="text-center">
-                      <div className="text-2xl font-bold text-white">
-                        {technologies.filter((t) => t.category === category).length}
+                <DrawerFooter className="px-0">
+                  <Button type="submit" variant="success">
+                    Add Technology
+                  </Button>
+                  <DrawerClose asChild>
+                    <Button variant="default">Cancel</Button>
+                  </DrawerClose>
+                </DrawerFooter>
+              </form>
+            </div>
+          </DrawerContent>
+        </Drawer>
+
+        {/* Search and Filter */}
+        <div className="mb-8 grid gap-4 md:grid-cols-2">
+          <div>
+            <Label htmlFor="search" className="mb-2 block text-white">
+              Search Technologies
+            </Label>
+            <Input
+              id="search"
+              type="text"
+              placeholder="Search technologies..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="border-neutral-600 bg-neutral-800/50 text-white placeholder:text-neutral-500"
+            />
+          </div>
+          <div>
+            <Label htmlFor="category" className="mb-2 block text-white">
+              Filter by Category
+            </Label>
+            <select
+              id="category"
+              value={categoryFilter}
+              onChange={(e) => setCategoryFilter(e.target.value)}
+              className="flex h-10 w-full rounded-md border border-neutral-600 bg-neutral-800/50 px-3 py-2 text-sm text-white placeholder:text-neutral-500 focus:ring-2 focus:ring-neutral-400 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              <option value="All">All Categories</option>
+              <option value="Frontend">Frontend</option>
+              <option value="Backend">Backend</option>
+              <option value="Database">Database</option>
+              <option value="Cloud">Cloud</option>
+              <option value="DevOps">DevOps</option>
+            </select>
+          </div>
+        </div>
+
+        {/* Technologies Grid */}
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {filteredTechnologies.map((tech, index) => {
+            const IconComponent = getIconForCategory(tech.category)
+            return (
+              <motion.div
+                key={tech.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+              >
+                <Card className="border-neutral-800 bg-neutral-900/50 transition-colors hover:bg-neutral-800/50">
+                  <CardHeader className="pb-2">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-3">
+                        {tech.image ? (
+                          <Image
+                            src={tech.image.url}
+                            alt={tech.name}
+                            className="h-8 w-8 object-contain"
+                            height={480}
+                            width={600}
+                          />
+                        ) : (
+                          <IconComponent className="h-8 w-8 text-neutral-400" />
+                        )}
+                        <CardTitle className="text-white">
+                          {tech.name}
+                        </CardTitle>
                       </div>
-                      <div className="text-neutral-400 text-sm">{category}</div>
+                      <div className="flex space-x-1">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8 text-neutral-400 hover:bg-neutral-700 hover:text-white"
+                        >
+                          <Edit2 className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8 text-red-500 hover:bg-red-500/10 hover:text-red-400"
+                          onClick={() => handleDeleteTechnology(tech.id)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
                     </div>
-                  ))}
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
+                    <CardDescription className="text-neutral-400">
+                      {tech.category}
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex items-center justify-between">
+                      <div className="flex space-x-2">
+                        {tech.url && (
+                          <a
+                            href={tech.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-sm text-blue-400 hover:underline"
+                          >
+                            Website
+                          </a>
+                        )}
+                        {tech.github && (
+                          <a
+                            href={tech.github}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-sm text-neutral-400 hover:underline"
+                          >
+                            GitHub
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            )
+          })}
+        </div>
       </div>
     </div>
   )

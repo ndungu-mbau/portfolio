@@ -1,38 +1,38 @@
-"use client";
+'use client'
 
-import { motion, useScroll, useMotionValueEvent } from "framer-motion";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useState } from "react";
-import { Home, FolderOpen, Settings } from "lucide-react";
+import { motion, useScroll, useMotionValueEvent } from 'framer-motion'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { useState } from 'react'
+import { Home, FolderOpen, Settings } from 'lucide-react'
 
 export default function FloatingNavbar() {
-  const { scrollYProgress } = useScroll();
-  const [visible, setVisible] = useState(true);
-  const pathname = usePathname();
+  const { scrollYProgress } = useScroll()
+  const [visible, setVisible] = useState(true)
+  const pathname = usePathname()
 
-  useMotionValueEvent(scrollYProgress, "change", (current) => {
+  useMotionValueEvent(scrollYProgress, 'change', (current) => {
     // Check if current is not undefined and is a number
-    if (typeof current === "number") {
-      const direction = current - scrollYProgress.getPrevious()!;
+    if (typeof current === 'number') {
+      const direction = current - scrollYProgress.getPrevious()!
 
       if (scrollYProgress.get() < 0.05) {
-        setVisible(true);
+        setVisible(true)
       } else {
         if (direction < 0) {
-          setVisible(true);
+          setVisible(true)
         } else {
-          setVisible(false);
+          setVisible(false)
         }
       }
     }
-  });
+  })
 
   const navItems = [
-    { href: "/", label: "Home", icon: Home },
-    { href: "/projects", label: "Projects", icon: FolderOpen },
-    { href: "/admin", label: "Admin", icon: Settings },
-  ];
+    { href: '/', label: 'Home', icon: Home },
+    { href: '/projects', label: 'Projects', icon: FolderOpen },
+    { href: '/admin', label: 'Admin', icon: Settings },
+  ]
 
   return (
     <motion.div
@@ -56,14 +56,14 @@ export default function FloatingNavbar() {
           href="/"
           className="mr-6 text-lg font-bold text-white transition-colors hover:text-neutral-300"
         >
-          John Doe
+          Nelson Mbau
         </Link>
 
         {/* Navigation Items */}
         <div className="flex items-center space-x-1">
           {navItems.map((item) => {
-            const Icon = item.icon;
-            const isActive = pathname === item.href;
+            const Icon = item.icon
+            const isActive = pathname === item.href
 
             return (
               <Link
@@ -71,8 +71,8 @@ export default function FloatingNavbar() {
                 href={item.href}
                 className={`relative flex items-center space-x-2 rounded-full px-4 py-2 transition-all duration-300 ${
                   isActive
-                    ? "bg-neutral-800 text-white"
-                    : "text-neutral-400 hover:bg-neutral-800/50 hover:text-white"
+                    ? 'bg-neutral-800 text-white'
+                    : 'text-neutral-400 hover:bg-neutral-800/50 hover:text-white'
                 }`}
               >
                 <Icon size={16} />
@@ -81,14 +81,14 @@ export default function FloatingNavbar() {
                   <motion.div
                     layoutId="activeTab"
                     className="absolute inset-0 -z-10 rounded-full bg-neutral-800"
-                    transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                    transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
                   />
                 )}
               </Link>
-            );
+            )
           })}
         </div>
       </motion.nav>
     </motion.div>
-  );
+  )
 }

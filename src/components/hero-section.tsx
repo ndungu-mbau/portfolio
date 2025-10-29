@@ -1,30 +1,26 @@
-"use client";
+'use client'
 
-import { motion } from "framer-motion";
-import { ArrowDown, Github, Linkedin, Mail } from "lucide-react";
-import { Button } from "~/components/ui/button";
-import TypewriterEffect from "~/components/ui/typewriter-effect";
+import Link from 'next/link'
+import { motion } from 'framer-motion'
+import { ArrowDown, Github, Linkedin, Mail } from 'lucide-react'
+import { Button } from '~/components/ui/button'
+import TypewriterEffect from '~/components/ui/typewriter-effect'
+import { api } from '~/trpc/react'
+import { Skeleton } from './ui/skeleton'
 
 export default function Hero() {
-  const technologies = [
-    "React",
-    "Next.js",
-    "TypeScript",
-    "Node.js",
-    "Python",
-    "PostgreSQL",
-    "AWS",
-    "Docker",
-    "GraphQL",
-    "Tailwind CSS",
-  ];
+  const { data: technologies = [], isLoading } =
+    api.technologies.getAllTechnologies.useQuery()
+
+  // Extract just the technology names for the typewriter effect
+  const technologyNames = technologies.map((tech) => tech.name)
 
   return (
     <section className="relative flex min-h-screen items-center justify-center overflow-hidden bg-neutral-950 px-4">
       {/* Background Animation */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -inset-10 opacity-30">
-          {[...(Array(50) as number[])].map((_, i) => (
+          {[...(Array(100) as number[])].map((_, i) => (
             <motion.div
               key={i}
               className="absolute rounded-full bg-neutral-400"
@@ -55,7 +51,7 @@ export default function Hero() {
           transition={{ duration: 0.8 }}
         >
           <h1 className="mb-6 text-5xl font-bold text-white md:text-7xl">
-            Hi, I&apos;m{" "}
+            Hi, I&apos;m{' '}
             <span className="bg-gradient-to-r from-blue-500 to-blue-400 bg-clip-text text-transparent">
               Nelson Mbau
             </span>
@@ -67,13 +63,17 @@ export default function Hero() {
             <div className="flex flex-col items-center justify-center gap-2 text-lg sm:flex-row md:text-xl">
               <span className="text-neutral-300">Specialized in</span>
               <div className="flex h-8 items-center">
-                <TypewriterEffect
-                  words={technologies}
-                  className="text-lg md:text-xl"
-                  typeSpeed={80}
-                  deleteSpeed={40}
-                  delayBetweenWords={1500}
-                />
+                {isLoading ? (
+                  <Skeleton className="h-8 w-24 rounded" />
+                ) : (
+                  <TypewriterEffect
+                    words={technologyNames}
+                    className="text-lg md:text-xl"
+                    typeSpeed={80}
+                    deleteSpeed={40}
+                    delayBetweenWords={1500}
+                  />
+                )}
               </div>
             </div>
           </div>
@@ -92,14 +92,15 @@ export default function Hero() {
         >
           <Button
             size="lg"
-            className="bg-blue-500 px-8 py-3 font-medium text-black hover:bg-blue-600"
+            className="bg-blue-500 px-8 py-3 font-medium text-white hover:bg-blue-600"
+            asChild
           >
-            View My Work
+            <Link href="/projects">View My Work</Link>
           </Button>
           <Button
             variant="outline"
             size="lg"
-            className="border-neutral-600 px-8 py-3 text-neutral-300 hover:bg-neutral-800 hover:text-white"
+            className="border border-neutral-500 px-8 py-3 text-neutral-800 hover:bg-neutral-800 hover:text-white"
           >
             Download CV
           </Button>
@@ -112,20 +113,26 @@ export default function Hero() {
           className="mb-12 flex justify-center space-x-6"
         >
           <a
-            href="#"
+            href="https://github.com/ndungu-mbau"
             className="text-neutral-500 transition-colors hover:text-white"
+            target="_blank"
+            rel="noopener noreferrer"
           >
             <Github size={24} />
           </a>
           <a
-            href="#"
+            href="https://www.linkedin.com/in/nelson-mbau-31788a136/"
             className="text-neutral-500 transition-colors hover:text-white"
+            target="_blank"
+            rel="noopener noreferrer"
           >
             <Linkedin size={24} />
           </a>
           <a
-            href="#"
+            href="mailto:mbau.ndungu@gmail.com"
             className="text-neutral-500 transition-colors hover:text-white"
+            target="_blank"
+            rel="noopener noreferrer"
           >
             <Mail size={24} />
           </a>
@@ -146,5 +153,5 @@ export default function Hero() {
         </motion.div>
       </div>
     </section>
-  );
+  )
 }

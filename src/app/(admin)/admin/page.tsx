@@ -1,10 +1,10 @@
-"use client";
+'use client'
 
-import { motion } from "framer-motion";
-import Link from "next/link";
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
-import { Button } from "~/components/ui/button";
-import { Badge } from "~/components/ui/badge";
+import { motion } from 'framer-motion'
+import Link from 'next/link'
+import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card'
+import { Button } from '~/components/ui/button'
+import { Badge } from '~/components/ui/badge'
 import {
   Settings,
   Users,
@@ -14,68 +14,68 @@ import {
   Edit,
   Trash2,
   Code2,
-} from "lucide-react";
+} from 'lucide-react'
 
 export default function AdminPage() {
   const stats = [
     {
-      title: "Total Projects",
-      value: "12",
+      title: 'Total Projects',
+      value: '12',
       icon: FolderOpen,
-      change: "+2 this month",
+      change: '+2 this month',
     },
     {
-      title: "Technologies",
-      value: "24",
+      title: 'Technologies',
+      value: '24',
       icon: Code2,
-      change: "+3 this month",
+      change: '+3 this month',
     },
     {
-      title: "Page Views",
-      value: "2,847",
+      title: 'Page Views',
+      value: '2,847',
       icon: BarChart3,
-      change: "+12% from last month",
+      change: '+12% from last month',
     },
-    { title: "Contact Messages", value: "23", icon: Users, change: "5 unread" },
-  ];
+    { title: 'Contact Messages', value: '23', icon: Users, change: '5 unread' },
+  ]
 
   const recentProjects = [
-    { name: "E-Commerce Platform", status: "Live", updated: "2 days ago" },
-    { name: "Task Management App", status: "Live", updated: "1 week ago" },
-    { name: "Weather Dashboard", status: "Live", updated: "2 weeks ago" },
-    { name: "Blog Platform", status: "Beta", updated: "3 days ago" },
-  ];
+    { name: 'E-Commerce Platform', status: 'Live', updated: '2 days ago' },
+    { name: 'Task Management App', status: 'Live', updated: '1 week ago' },
+    { name: 'Weather Dashboard', status: 'Live', updated: '2 weeks ago' },
+    { name: 'Blog Platform', status: 'Beta', updated: '3 days ago' },
+  ]
 
   const quickActions = [
     {
-      title: "Manage Projects",
-      description: "View, add, and edit your portfolio projects",
+      title: 'Manage Projects',
+      description: 'View, add, and edit your portfolio projects',
       icon: FolderOpen,
-      href: "/admin/projects",
-      color: "blue",
+      href: '/admin/projects',
+      color: 'blue',
     },
     {
-      title: "Manage Technologies",
-      description: "Update your technology stack and skills",
+      title: 'Manage Technologies',
+      description: 'Update your technology stack and skills',
       icon: Code2,
-      href: "/admin/technologies",
-      color: "green",
+      href: '/admin/technologies',
+      color: 'green',
     },
     {
-      title: "Site Settings",
-      description: "Configure portfolio settings and preferences",
+      title: 'Site Settings',
+      description: 'Configure portfolio settings and preferences',
       icon: Settings,
-      href: "/admin/settings",
-      color: "purple",
+      href: '/admin/settings',
+      color: 'purple',
     },
     {
-      title: "View Analytics",
-      description: "Check site performance and visitor statistics",
+      title: 'View Analytics',
+      description: 'Check site performance and visitor statistics',
       icon: BarChart3,
-      href: "/admin/analytics",
-      color: "orange",
+      href: '/admin/analytics',
+      color: 'orange',
     },
-  ];
+  ]
 
   return (
     <div className="min-h-screen bg-neutral-950">
@@ -120,7 +120,7 @@ export default function AdminPage() {
           {/* Stats Grid */}
           <div className="mb-12 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
             {stats.map((stat, index) => {
-              const Icon = stat.icon;
+              const Icon = stat.icon
               return (
                 <motion.div
                   key={stat.title}
@@ -148,7 +148,7 @@ export default function AdminPage() {
                     </CardContent>
                   </Card>
                 </motion.div>
-              );
+              )
             })}
           </div>
 
@@ -195,9 +195,9 @@ export default function AdminPage() {
                           <Badge
                             variant="outline"
                             className={`border-neutral-600 text-xs ${
-                              project.status === "Live"
-                                ? "border-green-400/30 text-green-400"
-                                : "border-yellow-400/30 text-yellow-400"
+                              project.status === 'Live'
+                                ? 'border-green-400/30 text-green-400'
+                                : 'border-yellow-400/30 text-yellow-400'
                             }`}
                           >
                             {project.status}
@@ -241,7 +241,7 @@ export default function AdminPage() {
                 <CardContent>
                   <div className="grid gap-4">
                     {quickActions.map((action, index) => {
-                      const Icon = action.icon;
+                      const Icon = action.icon
                       return (
                         <motion.div
                           key={action.title}
@@ -266,7 +266,7 @@ export default function AdminPage() {
                             </div>
                           </Link>
                         </motion.div>
-                      );
+                      )
                     })}
                   </div>
                 </CardContent>
@@ -276,5 +276,5 @@ export default function AdminPage() {
         </motion.div>
       </div>
     </div>
-  );
+  )
 }

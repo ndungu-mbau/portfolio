@@ -1,57 +1,61 @@
-"use client";
+'use client'
 
-import type React from "react";
+import type React from 'react'
 
-import { motion } from "framer-motion";
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
-import { Button } from "~/components/ui/button";
-import { Input } from "~/components/ui/input";
-import { Textarea } from "~/components/ui/textarea";
-import { Mail, MapPin, Phone } from "lucide-react";
-import { useState } from "react";
+import { motion } from 'framer-motion'
+import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card'
+import { Button } from '~/components/ui/button'
+import { Input } from '~/components/ui/input'
+import { Textarea } from '~/components/ui/textarea'
+import { Mail, MapPin, Phone } from 'lucide-react'
+import { useState } from 'react'
+
+import { api } from '~/trpc/react'
 
 export default function Contact() {
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    message: "",
-  });
+    name: '',
+    email: '',
+    message: '',
+  })
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Handle form submission here
-    console.log("Form submitted:", formData);
-  };
+  const { mutateAsync: createMessage } =
+    api.messages.createMessage.useMutation()
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    await createMessage(formData)
+  }
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
-    });
-  };
+    })
+  }
 
   const contactInfo = [
     {
       icon: <Mail className="h-6 w-6 text-neutral-300" />,
-      title: "Email",
-      value: "john.doe@example.com",
-      href: "mailto:john.doe@example.com",
+      title: 'Email',
+      value: 'mbau.ndungu@gmail.com',
+      href: 'mailto:mbau.ndungu@gmail.com',
     },
     {
       icon: <Phone className="h-6 w-6 text-neutral-300" />,
-      title: "Phone",
-      value: "+1 (555) 123-4567",
-      href: "tel:+15551234567",
+      title: 'Phone',
+      value: '+254 719 420 491',
+      href: 'tel:+254719420491',
     },
     {
       icon: <MapPin className="h-6 w-6 text-neutral-300" />,
-      title: "Location",
-      value: "San Francisco, CA",
-      href: "#",
+      title: 'Location',
+      value: 'Nairobi, Kenya',
+      href: '#',
     },
-  ];
+  ]
 
   return (
     <section id="contact" className="bg-neutral-950 px-4 py-20">
@@ -181,5 +185,5 @@ export default function Contact() {
         </div>
       </div>
     </section>
-  );
+  )
 }

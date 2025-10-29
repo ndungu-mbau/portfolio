@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
-"use client";
+'use client'
 
-import { useEditor, EditorContent } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
-import Link from "@tiptap/extension-link";
-import Placeholder from "@tiptap/extension-placeholder";
-import { Markdown } from "tiptap-markdown";
+import { useEditor, EditorContent } from '@tiptap/react'
+import StarterKit from '@tiptap/starter-kit'
+import Link from '@tiptap/extension-link'
+import Placeholder from '@tiptap/extension-placeholder'
+import { Markdown } from 'tiptap-markdown'
 import {
   Bold,
   Italic,
@@ -19,25 +19,25 @@ import {
   Redo,
   LinkIcon,
   Unlink,
-} from "lucide-react";
-import { Button } from "~/components/ui/button";
-import { useState, useCallback } from "react";
+} from 'lucide-react'
+import { Button } from '~/components/ui/button'
+import { useState, useCallback } from 'react'
 
 interface TiptapEditorProps {
-  content: string;
-  onChange: (content: string) => void;
-  placeholder?: string;
-  className?: string;
+  content: string
+  onChange: (content: string) => void
+  placeholder?: string
+  className?: string
 }
 
 export function TiptapEditor({
   content,
   onChange,
-  placeholder = "Start writing...",
-  className = "",
+  placeholder = 'Start writing...',
+  className = '',
 }: TiptapEditorProps) {
-  const [isLinkModalOpen, setIsLinkModalOpen] = useState(false);
-  const [linkUrl, setLinkUrl] = useState("");
+  const [isLinkModalOpen, setIsLinkModalOpen] = useState(false)
+  const [linkUrl, setLinkUrl] = useState('')
 
   const editor = useEditor({
     immediatelyRender: false,
@@ -47,7 +47,7 @@ export function TiptapEditor({
         openOnClick: false,
         HTMLAttributes: {
           class:
-            "text-blue-400 underline hover:text-blue-300 transition-colors",
+            'text-blue-400 underline hover:text-blue-300 transition-colors',
         },
       }),
       Placeholder.configure({
@@ -57,57 +57,57 @@ export function TiptapEditor({
     ],
     content,
     onUpdate: ({ editor }) => {
-      onChange(editor.storage.markdown.getMarkdown() as string);
+      onChange(editor.storage.markdown.getMarkdown() as string)
     },
     editorProps: {
       attributes: {
         class:
-          "prose prose-invert max-w-none focus:outline-none min-h-[200px] p-4 text-neutral-300",
+          'prose prose-invert max-w-none focus:outline-none min-h-[200px] p-4 text-neutral-300',
       },
     },
-  });
+  })
 
   const setLink = useCallback(() => {
-    if (!editor) return;
+    if (!editor) return
 
-    const previousUrl = editor.getAttributes("link").href as string;
-    setLinkUrl(previousUrl ?? "");
-    setIsLinkModalOpen(true);
-  }, [editor]);
+    const previousUrl = editor.getAttributes('link').href as string
+    setLinkUrl(previousUrl ?? '')
+    setIsLinkModalOpen(true)
+  }, [editor])
 
   const handleSetLink = () => {
-    if (!editor) return;
+    if (!editor) return
 
     // cancelled
-    if (linkUrl === "") {
-      return;
+    if (linkUrl === '') {
+      return
     }
 
     // empty
-    if (linkUrl === "") {
-      editor.chain().focus().extendMarkRange("link").unsetLink().run();
-      setIsLinkModalOpen(false);
-      return;
+    if (linkUrl === '') {
+      editor.chain().focus().extendMarkRange('link').unsetLink().run()
+      setIsLinkModalOpen(false)
+      return
     }
 
     // update link
     editor
       .chain()
       .focus()
-      .extendMarkRange("link")
+      .extendMarkRange('link')
       .setLink({ href: linkUrl })
-      .run();
-    setIsLinkModalOpen(false);
-    setLinkUrl("");
-  };
+      .run()
+    setIsLinkModalOpen(false)
+    setLinkUrl('')
+  }
 
   const unsetLink = useCallback(() => {
-    if (!editor) return;
-    editor.chain().focus().unsetLink().run();
-  }, [editor]);
+    if (!editor) return
+    editor.chain().focus().unsetLink().run()
+  }, [editor])
 
   if (!editor) {
-    return null;
+    return null
   }
 
   return (
@@ -122,9 +122,9 @@ export function TiptapEditor({
           size="sm"
           onClick={() => editor.chain().focus().toggleBold().run()}
           className={`h-8 w-8 p-0 ${
-            editor.isActive("bold")
-              ? "bg-neutral-700 text-white"
-              : "text-neutral-400 hover:bg-neutral-700 hover:text-white"
+            editor.isActive('bold')
+              ? 'bg-neutral-700 text-white'
+              : 'text-neutral-400 hover:bg-neutral-700 hover:text-white'
           }`}
         >
           <Bold size={16} />
@@ -136,9 +136,9 @@ export function TiptapEditor({
           size="sm"
           onClick={() => editor.chain().focus().toggleItalic().run()}
           className={`h-8 w-8 p-0 ${
-            editor.isActive("italic")
-              ? "bg-neutral-700 text-white"
-              : "text-neutral-400 hover:bg-neutral-700 hover:text-white"
+            editor.isActive('italic')
+              ? 'bg-neutral-700 text-white'
+              : 'text-neutral-400 hover:bg-neutral-700 hover:text-white'
           }`}
         >
           <Italic size={16} />
@@ -150,9 +150,9 @@ export function TiptapEditor({
           size="sm"
           onClick={() => editor.chain().focus().toggleStrike().run()}
           className={`h-8 w-8 p-0 ${
-            editor.isActive("strike")
-              ? "bg-neutral-700 text-white"
-              : "text-neutral-400 hover:bg-neutral-700 hover:text-white"
+            editor.isActive('strike')
+              ? 'bg-neutral-700 text-white'
+              : 'text-neutral-400 hover:bg-neutral-700 hover:text-white'
           }`}
         >
           <Strikethrough size={16} />
@@ -164,9 +164,9 @@ export function TiptapEditor({
           size="sm"
           onClick={() => editor.chain().focus().toggleCode().run()}
           className={`h-8 w-8 p-0 ${
-            editor.isActive("code")
-              ? "bg-neutral-700 text-white"
-              : "text-neutral-400 hover:bg-neutral-700 hover:text-white"
+            editor.isActive('code')
+              ? 'bg-neutral-700 text-white'
+              : 'text-neutral-400 hover:bg-neutral-700 hover:text-white'
           }`}
         >
           <Code size={16} />
@@ -180,9 +180,9 @@ export function TiptapEditor({
           size="sm"
           onClick={() => editor.chain().focus().toggleBulletList().run()}
           className={`h-8 w-8 p-0 ${
-            editor.isActive("bulletList")
-              ? "bg-neutral-700 text-white"
-              : "text-neutral-400 hover:bg-neutral-700 hover:text-white"
+            editor.isActive('bulletList')
+              ? 'bg-neutral-700 text-white'
+              : 'text-neutral-400 hover:bg-neutral-700 hover:text-white'
           }`}
         >
           <List size={16} />
@@ -194,9 +194,9 @@ export function TiptapEditor({
           size="sm"
           onClick={() => editor.chain().focus().toggleOrderedList().run()}
           className={`h-8 w-8 p-0 ${
-            editor.isActive("orderedList")
-              ? "bg-neutral-700 text-white"
-              : "text-neutral-400 hover:bg-neutral-700 hover:text-white"
+            editor.isActive('orderedList')
+              ? 'bg-neutral-700 text-white'
+              : 'text-neutral-400 hover:bg-neutral-700 hover:text-white'
           }`}
         >
           <ListOrdered size={16} />
@@ -208,9 +208,9 @@ export function TiptapEditor({
           size="sm"
           onClick={() => editor.chain().focus().toggleBlockquote().run()}
           className={`h-8 w-8 p-0 ${
-            editor.isActive("blockquote")
-              ? "bg-neutral-700 text-white"
-              : "text-neutral-400 hover:bg-neutral-700 hover:text-white"
+            editor.isActive('blockquote')
+              ? 'bg-neutral-700 text-white'
+              : 'text-neutral-400 hover:bg-neutral-700 hover:text-white'
           }`}
         >
           <Quote size={16} />
@@ -224,15 +224,15 @@ export function TiptapEditor({
           size="sm"
           onClick={setLink}
           className={`h-8 w-8 p-0 ${
-            editor.isActive("link")
-              ? "bg-neutral-700 text-white"
-              : "text-neutral-400 hover:bg-neutral-700 hover:text-white"
+            editor.isActive('link')
+              ? 'bg-neutral-700 text-white'
+              : 'text-neutral-400 hover:bg-neutral-700 hover:text-white'
           }`}
         >
           <LinkIcon size={16} />
         </Button>
 
-        {editor.isActive("link") && (
+        {editor.isActive('link') && (
           <Button
             type="button"
             variant="ghost"
@@ -285,11 +285,11 @@ export function TiptapEditor({
               className="mb-4 w-full rounded border border-neutral-600 bg-neutral-800 px-3 py-2 text-white placeholder:text-neutral-500"
               autoFocus
               onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  handleSetLink();
-                } else if (e.key === "Escape") {
-                  setIsLinkModalOpen(false);
-                  setLinkUrl("");
+                if (e.key === 'Enter') {
+                  handleSetLink()
+                } else if (e.key === 'Escape') {
+                  setIsLinkModalOpen(false)
+                  setLinkUrl('')
                 }
               }}
             />
@@ -299,8 +299,8 @@ export function TiptapEditor({
                 variant="outline"
                 size="sm"
                 onClick={() => {
-                  setIsLinkModalOpen(false);
-                  setLinkUrl("");
+                  setIsLinkModalOpen(false)
+                  setLinkUrl('')
                 }}
                 className="border-neutral-600 text-neutral-300"
               >
@@ -319,5 +319,5 @@ export function TiptapEditor({
         </div>
       )}
     </div>
-  );
+  )
 }
