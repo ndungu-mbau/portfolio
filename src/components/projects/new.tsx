@@ -57,6 +57,8 @@ export default function NewProjectPage({
   const [newFeature, setNewFeature] = useState('')
   const [newChallenge, setNewChallenge] = useState('')
 
+  const [imageUrl, setImageUrl] = useState<string>('')
+
   // Form state
   const [formData, setFormData] = useState<ProjectFormData>({
     title: '',
@@ -348,23 +350,21 @@ export default function NewProjectPage({
                   <label className="block text-sm font-medium text-neutral-300">
                     Project Image
                   </label>
-                  {formData.image ? (
+                  {imageUrl ? (
                     <div className="relative">
                       <div className="relative h-40 w-full overflow-hidden rounded-lg border border-neutral-700">
                         <Image
-                          src={formData.image}
+                          src={imageUrl}
                           alt="Project preview"
                           fill
                           className="object-cover transition-transform duration-300 group-hover:scale-105"
-                          sizes="160px"
-                          height={500}
-                          width={800}
                         />
                         <button
                           type="button"
-                          onClick={() =>
+                          onClick={() => {
                             setFormData((prev) => ({ ...prev, image: '' }))
-                          }
+                            setImageUrl('')
+                          }}
                           className="absolute top-2 right-2 rounded-full bg-red-600 p-1 text-white hover:bg-red-700"
                         >
                           <X className="h-4 w-4" />
@@ -382,14 +382,14 @@ export default function NewProjectPage({
                       </p>
                       <UploadButton
                         endpoint="imageUploader"
-                        onClientUploadComplete={(res) => {
-                          if (res?.[0]?.url) {
+                        onClientUploadComplete={([res]) => {
+                          if (res?.url) {
+                            setImageUrl(res?.url)
                             setFormData((prev) => ({
                               ...prev,
                               image:
                                 // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access,
-                                (res?.[0]?.serverData?.file?.id as string) ??
-                                '',
+                                (res?.serverData?.file?.id as string) ?? '',
                             }))
                             toast.success('Image uploaded successfully')
                           }
