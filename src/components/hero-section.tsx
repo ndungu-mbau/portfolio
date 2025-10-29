@@ -6,9 +6,10 @@ import { ArrowDown, Github, Linkedin, Mail } from 'lucide-react'
 import { Button } from '~/components/ui/button'
 import TypewriterEffect from '~/components/ui/typewriter-effect'
 import { api } from '~/trpc/react'
+import { Skeleton } from './ui/skeleton'
 
 export default function Hero() {
-  const { data: technologies = [] } =
+  const { data: technologies = [], isLoading } =
     api.technologies.getAllTechnologies.useQuery()
 
   // Extract just the technology names for the typewriter effect
@@ -62,13 +63,17 @@ export default function Hero() {
             <div className="flex flex-col items-center justify-center gap-2 text-lg sm:flex-row md:text-xl">
               <span className="text-neutral-300">Specialized in</span>
               <div className="flex h-8 items-center">
-                <TypewriterEffect
-                  words={technologyNames}
-                  className="text-lg md:text-xl"
-                  typeSpeed={80}
-                  deleteSpeed={40}
-                  delayBetweenWords={1500}
-                />
+                {isLoading ? (
+                  <Skeleton className="h-8 w-24 rounded" />
+                ) : (
+                  <TypewriterEffect
+                    words={technologyNames}
+                    className="text-lg md:text-xl"
+                    typeSpeed={80}
+                    deleteSpeed={40}
+                    delayBetweenWords={1500}
+                  />
+                )}
               </div>
             </div>
           </div>

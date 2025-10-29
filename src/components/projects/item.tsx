@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 'use client'
 
 import { motion } from 'framer-motion'
@@ -76,7 +77,7 @@ export default function ProjectDetail({
                   </Badge>
                 </div>
 
-                <div className="prose prose-invert mb-8 max-w-none text-neutral-400 prose-p:my-4 prose-p:text-xl prose-p:leading-relaxed prose-headings:mb-4 prose-headings:mt-8 prose-headings:text-white prose-ul:list-disc prose-ol:list-decimal prose-li:my-1 prose-a:text-blue-400 hover:prose-a:text-blue-300 prose-code:rounded-md prose-code:bg-neutral-800 prose-code:px-1.5 prose-code:py-0.5 prose-code:before:content-[''] prose-code:after:content-['']">
+                <div className="prose prose-invert prose-p:my-4 prose-p:text-xl prose-p:leading-relaxed prose-headings:mb-4 prose-headings:mt-8 prose-headings:text-white prose-ul:list-disc prose-ol:list-decimal prose-li:my-1 prose-a:text-blue-400 hover:prose-a:text-blue-300 prose-code:rounded-md prose-code:bg-neutral-800 prose-code:px-1.5 prose-code:py-0.5 prose-code:before:content-[''] prose-code:after:content-[''] mb-8 max-w-none text-neutral-400">
                   <ReactMarkdown remarkPlugins={[remarkGfm]}>
                     {project.longDescription || ''}
                   </ReactMarkdown>
@@ -259,7 +260,7 @@ export default function ProjectDetail({
                 Project Gallery
               </h2>
               <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                {project.gallery.map((image, index) => (
+                {project.gallery.map((galleryImage, index) => (
                   <motion.div
                     key={index}
                     initial={{ opacity: 0, scale: 0.9 }}
@@ -269,7 +270,7 @@ export default function ProjectDetail({
                     className="group relative cursor-pointer"
                   >
                     <Image
-                      src={image || '/placeholder.svg'}
+                      src={galleryImage.url ?? '/placeholder.svg'}
                       alt={`${project.title} screenshot ${index + 1}`}
                       width={600}
                       height={400}
