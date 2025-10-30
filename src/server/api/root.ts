@@ -3,6 +3,7 @@ import { projectsRouter } from '~/server/api/routers/projects'
 import { technologiesRouter } from '~/server/api/routers/technologies'
 import { uploadsRouter } from '~/server/api/routers/uploads'
 import { messagesRouter } from '~/server/api/routers/messages'
+import { dashboardRouter } from '~/server/api/routers/dashboard'
 
 import { createCallerFactory, createTRPCRouter } from '~/server/api/trpc'
 
@@ -17,6 +18,7 @@ export const appRouter = createTRPCRouter({
   technologies: technologiesRouter,
   uploads: uploadsRouter,
   messages: messagesRouter,
+  dashboard: dashboardRouter,
 })
 
 // export type definition of API
