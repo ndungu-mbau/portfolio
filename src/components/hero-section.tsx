@@ -10,7 +10,7 @@ import { Skeleton } from './ui/skeleton'
 
 export default function Hero() {
   const { data: technologies = [], isLoading } =
-    api.technologies.getAllTechnologies.useQuery()
+    api.technologies.getFeaturedTechnologies.useQuery()
 
   // Extract just the technology names for the typewriter effect
   const technologyNames = technologies.map((tech) => tech.name)

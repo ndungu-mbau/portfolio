@@ -25,6 +25,7 @@ export const technologiesRouter = createTRPCRouter({
         url: z.string(),
         github: z.string(),
         image: z.string(),
+        featured: z.boolean().default(false),
       })
     )
     .mutation(async ({ input }) => {
@@ -55,6 +56,7 @@ export const technologiesRouter = createTRPCRouter({
         url: z.string(),
         github: z.string(),
         image: z.string(),
+        featured: z.boolean().default(false),
       })
     )
     .mutation(async ({ input }) => {
@@ -96,17 +98,43 @@ export const technologiesRouter = createTRPCRouter({
 
   getAllTechnologies: publicProcedure.query(async () => {
     try {
-      const technologies = await db.query.technologies.findMany({
+      const allTechnologies = await db.query.technologies.findMany({
         with: {
           image: true,
         },
       })
-      return technologies
+      // Convert null featured values to false
+      return allTechnologies.map((tech) => ({
+        ...tech,
+        featured: tech.featured ?? false,
+      }))
     } catch (e) {
       console.error(e)
       throw new TRPCError({
         code: 'INTERNAL_SERVER_ERROR',
         message: 'Technologies not found',
+      })
+    }
+  }),
+
+  getFeaturedTechnologies: publicProcedure.query(async () => {
+    try {
+      const featuredTechnologies = await db.query.technologies.findMany({
+        where: (tbl, { eq }) => eq(tbl.featured, true),
+        with: {
+          image: true,
+        },
+      })
+      // Return empty array if no featured technologies found (expected behavior)
+      return featuredTechnologies.map((tech) => ({
+        ...tech,
+        featured: tech.featured ?? false,
+      }))
+    } catch (e) {
+      console.error(e)
+      throw new TRPCError({
+        code: 'INTERNAL_SERVER_ERROR',
+        message: 'Featured technologies not found',
       })
     }
   }),
