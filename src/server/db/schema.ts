@@ -112,6 +112,7 @@ export const technologies = createTable('technology', (d) => ({
     .uuid()
     .notNull()
     .references(() => uploads.id),
+  featured: d.boolean(),
   createdAt: d
     .timestamp({ mode: 'date', withTimezone: true })
     .default(sql`CURRENT_TIMESTAMP`),

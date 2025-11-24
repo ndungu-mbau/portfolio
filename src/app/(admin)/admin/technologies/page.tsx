@@ -31,6 +31,7 @@ import {
   SelectTrigger,
 } from '~/components/ui/select'
 import { Skeleton } from '~/components/ui/skeleton'
+import { Checkbox } from '~/components/ui/checkbox'
 import { api } from '~/trpc/react'
 import {
   Code,
@@ -53,6 +54,7 @@ export default function AdminTechnologiesPage() {
     url: '',
     github: '',
     image: '',
+    featured: false,
   })
   const [imageUrl, setImageUrl] = useState<string | null>(null)
   const [open, setOpen] = useState(false)
@@ -80,6 +82,7 @@ export default function AdminTechnologiesPage() {
         url: '',
         github: '',
         image: '',
+        featured: false,
       })
       setImageUrl(null)
       setOpen(false)
@@ -135,6 +138,7 @@ export default function AdminTechnologiesPage() {
         url: newTech.url,
         github: newTech.github,
         image: newTech.image ?? '',
+        featured: newTech.featured,
       })
     }
   }
@@ -307,6 +311,26 @@ export default function AdminTechnologiesPage() {
                         className="ut-button:bg-white ut-button:text-black ut-button:hover:bg-neutral-200 ut-button:ut-uploading:bg-white/50"
                       />
                     )}
+                  </div>
+                  <div className="space-y-2">
+                    <div className="flex items-center space-x-2">
+                      <Checkbox
+                        id="tech-featured"
+                        checked={newTech.featured}
+                        onCheckedChange={(checked) =>
+                          setNewTech({ ...newTech, featured: checked as boolean })
+                        }
+                      />
+                      <Label
+                        htmlFor="tech-featured"
+                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-white cursor-pointer"
+                      >
+                        Featured Technology
+                      </Label>
+                    </div>
+                    <p className="text-xs text-neutral-400">
+                      Featured technologies will appear in the hero section typewriter effect
+                    </p>
                   </div>
                 </div>
                 <DrawerFooter className="px-0">

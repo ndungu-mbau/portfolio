@@ -1,0 +1,1 @@
+ALTER TABLE "portfolio_technology" ADD COLUMN IF NOT EXISTS "featured" boolean;
